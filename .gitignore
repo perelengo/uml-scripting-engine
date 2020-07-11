@@ -1,0 +1,7 @@
+/target/
+/pom.xml.releaseBackup
+/log.log
+/.settings/
+/.classpath
+/.project
+/release.properties
