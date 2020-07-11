@@ -8,17 +8,37 @@ To use this tool, need to use the profile available at net.samsarasoftware.metam
 
 As soon as possible I have more time, will add info on how to use it in simple and advanced modes.
 
+## How-to
+The transpiler can generate internal or external transformations.
+Internal transformations are applied to the same model the profile is applied to.
+External transformations are applied to external models.
 
+### Internal transformations
+TO-DO
 
+### External transformations
+TO-DO
 
+### Querying elements
+TO-DO
 
-# uml2qvto.xsl
+### Temlating content
+TO-DO
+
+### Updating content
+TO-DO
+
+### Removing content
+TO-DO
+
+## Components
+### uml2qvto.xsl
 Transpiles the uml2qvto profile applications to a qvto transformation.
 This transformation is finished and works.
 Has been tested in eclipse with apache xalan 2.7.1 and needs BSF 2.4 engine and bsf-3.1-all.jar in the execution classpath.
 
 
-# net.samsarasoftware.scripting.ScriptingEngine
+### net.samsarasoftware.scripting.ScriptingEngine
 Processes the input UML scripting model to generate the corresponding qvto, and then executes the qvto transformation.
 The XSLexecution code needs testing, because haven't tested already since the inclusion of the BSF libraries.
 The qvto execution code works.
