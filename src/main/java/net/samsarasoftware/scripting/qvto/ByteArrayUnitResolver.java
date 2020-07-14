@@ -56,7 +56,8 @@ import org.eclipse.m2m.internal.qvt.oml.compiler.UnitResolver;
 			private byte[] qvto;
 
 			private SUnit(byte[] qvto) {
-				super(null,null,null);
+				//Create fake params just to execute.
+				super("net.samsarasoftware","internalQvtoTransform",URI.createURI("plugin://new.samsarasoftware/uml-scripting-engine/qvto"));
 				this.qvto = qvto;
 			}
 			

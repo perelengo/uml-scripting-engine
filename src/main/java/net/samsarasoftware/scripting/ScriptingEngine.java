@@ -6,8 +6,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -22,7 +25,9 @@ import java.util.regex.Pattern;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -38,6 +43,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.m2m.internal.qvt.oml.InternalTransformationExecutor;
 import org.eclipse.m2m.qvt.oml.ExecutionContextImpl;
 import org.eclipse.m2m.qvt.oml.ExecutionDiagnostic;
 import org.eclipse.uml2.uml.Profile;
@@ -47,7 +53,6 @@ import org.eclipse.uml2.uml.resource.UMLResource;
 
 import net.samsarasoftware.scripting.qvto.In;
 import net.samsarasoftware.scripting.qvto.InOut;
-import net.samsarasoftware.scripting.qvto.InternalTransformationExecutor;
 import net.samsarasoftware.scripting.qvto.Out;
 import net.samsarasoftware.scripting.qvto.Param;
 
@@ -74,7 +79,8 @@ limitations under the License.
 
 public class ScriptingEngine {
 
-	public String MODEL;
+	public String SCRIPT_MODEL = null;
+	private String TARGET_MODEL = null;
 	public String OUTPUT;
 	public List<Param> INPUT=new ArrayList<Param>();
 
@@ -84,8 +90,11 @@ public class ScriptingEngine {
 			printUsage();
 
 		for (int i = 0; i < args.length; i++) {
-			if ("-model".equals(args[i])) {
-					MODEL = args[++i];
+			if ("-script".equals(args[i])) {
+				SCRIPT_MODEL = args[++i];
+				TARGET_MODEL = (TARGET_MODEL==null)?SCRIPT_MODEL:TARGET_MODEL;
+			}else if("-model".equals(args[i])){
+				TARGET_MODEL = args[++i];
 			}else if("-in".equals(args[i])){
 				if(args[i+1].contains(":/"))
 					INPUT.add(new In(URI.createURI(args[++i])));
@@ -108,37 +117,69 @@ public class ScriptingEngine {
 	}
 
 	private void printUsage() throws Exception {
-		throw new Exception("Errores en los argumentos. Uso:\n java -jar <nombrejar>.jar \n "
-				+ "[-model <path to the UML model>\n " + "[-output <path to qvto output>]" + "");
+		throw new Exception("Errores en los argumentos. Uso:\n \n "
+				+ "java -jar uml-scripting-engine-0.2.0-SNAPSHOT-jar-with-dependencies.jar \n " 
+					+ "	-script 	<path to uml model with the uml2qvto profile applied> \n "
+					+ "	-model 		<path to uml model the transform will be applied to. If not defined or is the same as the script model, the script model is used and is treated as an internal transformation.> \n "
+					+ "	-in 		<QVTO dependencies Input URI (metamodel URI, uml primitive types model URI,...)> \n "
+					+ "	-in ... \n "
+					+ "	-in ... \n "
+					+ "	-inout 		<additional URIs of files that are input and output at the same time> \n "
+					+ "	-inout ... \n "
+					+ "	-inout ... \n "
+					+ "	-out 		<additional URIs of files that are output files> \n "
+				);
 	}
 
-	private ByteArrayOutputStream runCompile() throws Exception {
+	private File runCompile() throws Exception {
+		InputStream bais =null;
 		try {
 			
 			//Inicio de transformación XSL
 			TransformerFactory factory = TransformerFactory.newInstance();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			InputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			factory.setURIResolver(new URIResolver() {
+				
+				@Override
+				public Source resolve(String href, String base) throws TransformerException {
+					if(href.indexOf("uml2_5_0")!=-1){
+						return new StreamSource(this.getClass().getClassLoader().getResourceAsStream("metamodels/http__www.eclipse.org_uml2_5_0_0_UML.ecore"));
+					}else{
+						return null;
+					}
+				}
+			});
+			
+			bais = this.getClass().getClassLoader().getResourceAsStream("Uml2Qvto.xsl");
 			Source xslt = new StreamSource(bais);
 			Transformer transformer = factory.newTransformer(xslt);
 
-			Source text = new StreamSource(new File(MODEL));
-			ByteArrayOutputStream baosXsl=new ByteArrayOutputStream();
+			Source text = new StreamSource(new File(SCRIPT_MODEL));
+			File tempFile=File.createTempFile("uml-scripting-engine", ".qvto");
+
+			//FIXME- uncomment 
+			//tempFile.deleteOnExit();
+			
+			FileOutputStream baosXsl=new FileOutputStream(tempFile);
 			transformer.transform(text, new StreamResult(baosXsl));
 			
-			return baosXsl;
+			return tempFile;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
+		}finally{
+			if(bais!=null)
+				try{
+					bais.close();
+				}catch(Exception e){}
 		}
 	}
 	
-	private void runTransform(ByteArrayOutputStream baosXsl) throws Exception {
+	private void runTransform(File qvto) throws Exception {
 		try {
 			
 			//Inicio de transformación QVTO
-			InternalTransformationExecutor executor = new InternalTransformationExecutor(baosXsl.toByteArray());
+			InternalTransformationExecutor executor = new InternalTransformationExecutor(URI.createFileURI(qvto.getAbsolutePath()));
 
 			ExecutionContextImpl context = new ExecutionContextImpl();
 			ResourceSet resourceSet = new ResourceSetImpl();
@@ -146,7 +187,7 @@ public class ScriptingEngine {
 			registerPackages(resourceSet);
 
 			
-			INPUT.add(new InOut(URI.createFileURI(MODEL)));
+			INPUT.add(0,new InOut(URI.createFileURI(TARGET_MODEL)));
 
 			for (Param inputURI : INPUT) {
 				resourceSet.getURIConverter().getURIMap();
@@ -219,17 +260,17 @@ public class ScriptingEngine {
 			System.exit(1);
 		}
 		
-		ByteArrayOutputStream baos = null;
+		File qvto = null;
 
 		try {
-			baos= s.runCompile();
+			qvto= s.runCompile();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(2);
 		}
 
 		try {
-			s.runTransform(baos);
+			s.runTransform(qvto);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(3);

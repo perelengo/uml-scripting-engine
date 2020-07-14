@@ -794,6 +794,7 @@ inout model : uml::Model
 <xsl:with-param name="metaClass" select="."/>
 </xsl:call-template>
 </xsl:for-each>
+**/
 </xsl:template>
 
 <xsl:template name="tabulate">
@@ -1034,10 +1035,12 @@ inout model : uml::Model
 	<xsl:variable name="alreadyProcessedChild" select="./node()" /> -->
 	<xsl:variable name="metaClass" select="$umlMetamodel//ecore:EPackage[1]//*[./@xsi:type='ecore:EClass' and ./@name=$metaClassName]"/>
 	
-	<xsl:call-template name="printMetaClassAtributes">
+<!--
+	--For debug purpose--
+ 	<xsl:call-template name="printMetaClassAtributes">
 			<xsl:with-param name="metaClass" select="$metaClass"/>
 	</xsl:call-template>
-
+ -->
 
 	<xsl:variable name="metaClassAttributes1" >
 		<xsl:call-template name="getMetaClassAtributes">
