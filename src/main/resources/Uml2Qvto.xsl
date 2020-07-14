@@ -1036,7 +1036,7 @@ inout model : uml::Model
 	<xsl:variable name="metaClass" select="$umlMetamodel//ecore:EPackage[1]//*[./@xsi:type='ecore:EClass' and ./@name=$metaClassName]"/>
 	
 <!--
-	--For debug purpose--
+	-For debug purpose-
  	<xsl:call-template name="printMetaClassAtributes">
 			<xsl:with-param name="metaClass" select="$metaClass"/>
 	</xsl:call-template>
