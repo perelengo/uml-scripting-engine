@@ -12,7 +12,7 @@ As soon as possible I have more time, will add info on how to use it in simple a
 ## Run
 JDK > 1.7
 
-`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
+java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
 
   -script < path to uml model with the uml2qvto profile applied >
   
@@ -30,7 +30,7 @@ JDK > 1.7
   
   -inout ...
   
-  -out <additional URIs of files that are output files>`
+  -out <additional URIs of files that are output files>
   
   
   
@@ -39,7 +39,7 @@ In windows filesystems, backslash (\) separators are mandatory to avoid confusio
 Filesystem URIs must contain full path.
 
 ### Example of an internal transformation
-`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
+java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
 
   -script < path to uml model with the uml2qvto profile applied >
   
@@ -49,12 +49,12 @@ Filesystem URIs must contain full path.
    
    -in "c:\temp\myprofile.profile.uml"
    
-   -in "platform:/plugin/plugin-id/path/my.profile.uml"`
+   -in "platform:/plugin/plugin-id/path/my.profile.uml"
    
   
 
 ### Example of an external transformation
-`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
+java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
 
  -script C:\samsara-workspace\net.samsarasoftware\uml-scripting-engine\src\test\uml\test1\model\stacks.uml 
  
@@ -70,7 +70,7 @@ Filesystem URIs must contain full path.
  
  -in platform:/plugin/net.samsarasoftware.metamodels/profiles/database.profile.uml
  
- -in platform:/plugin/net.samsarasoftware.metamodels/profiles/http.profile.uml`
+ -in platform:/plugin/net.samsarasoftware.metamodels/profiles/http.profile.uml
  
  
 
