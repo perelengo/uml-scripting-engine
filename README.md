@@ -12,25 +12,16 @@ As soon as possible I have more time, will add info on how to use it in simple a
 ## Run
 JDK > 1.7
 
-java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
-
-  -script <path to uml model with the uml2qvto profile applied>
-  
+`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
+  -script < path to uml model with the uml2qvto profile applied >
   -model <path to uml model the transform will be applied to. If not defined or is the same as the script model, the script model is used and is treated as an internal transformation.>
-  
   -in <QVTO dependencies Input URI (metamodel URI, uml primitive types model URI,...)>
-  
   -in ...
-  
   -in ...
-  
   -inout <additional URIs of files that are input and output at the same time>
-  
   -inout ...
-  
   -inout ...
-  
-  -out <additional URIs of files that are output files>
+  -out <additional URIs of files that are output files>`
   
   
 ### Note on input/output URIs
@@ -38,37 +29,24 @@ In windows filesystems, backslash (\) separators are mandatory to avoid confusio
 Filesystem URIs must contain full path.
 
 ### Example of an internal transformation
-java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
-
-  -script <path to uml model with the uml2qvto profile applied>
-  
-  -in "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
-  
-  -in "pathmap://UML_PROFILES/Standard.profile.uml"
-  
-  -in "c:\temp\myprofile.profile.uml"
-  
-  -in "platform:/plugin/plugin-id/path/my.profile.uml"
+`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
+  -script < path to uml model with the uml2qvto profile applied >
+   -in "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
+   -in "pathmap://UML_PROFILES/Standard.profile.uml"
+   -in "c:\temp\myprofile.profile.uml"
+   -in "platform:/plugin/plugin-id/path/my.profile.uml"`
   
 
 ### Example of an external transformation
-java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
-
+`java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.jar"  net.samsarasoftware.scripting.ScriptingEngine
  -script C:\samsara-workspace\net.samsarasoftware\uml-scripting-engine\src\test\uml\test1\model\stacks.uml 
- 
  -model C:\samsara-workspace\net.samsarasoftware\uml-scripting-engine\src\test\uml\test1\out\stacks.uml
- 
  -in pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml
- 
  -in pathmap://UML_PROFILES/Standard.profile.uml
- 
  -in platform:/plugin/net.samsarasoftware.metamodels/profiles/dojo.profile.uml
- 
  -in platform:/plugin/net.samsarasoftware.metamodels/profiles/transaction.profile.uml
- 
  -in platform:/plugin/net.samsarasoftware.metamodels/profiles/database.profile.uml
- 
- -in platform:/plugin/net.samsarasoftware.metamodels/profiles/http.profile.uml
+ -in platform:/plugin/net.samsarasoftware.metamodels/profiles/http.profile.uml`
  
 
 
