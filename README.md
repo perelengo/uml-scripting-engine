@@ -35,7 +35,7 @@ java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.
   
   
 ### Note on input/output URIs
-In windows filesystems, backslash (\) separators are mandatory to avoid confusion with PDE plugins or platform URIs.
+In windows filesystems, backslash (\\) separators are mandatory to avoid confusion with PDE plugins or platform URIs.
 Filesystem URIs must contain full path.
 
 ### Example of an internal transformation
