@@ -257,6 +257,7 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -332,6 +333,24 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<goals>clean</goals>
+					<releaseProfiles>publish</releaseProfiles>
+					<checkModificationExcludes>**/THIRD-PARTY.properties</checkModificationExcludes>
+				</configuration>
+			</plugin>
+			<extensions>
+				<!-- Enabling the use of SSH -->
+				<extension>
+					<groupId>org.apache.maven.wagon</groupId>
+					<artifactId>wagon-ssh-external</artifactId>
+					<version>2.12</version>
+				</extension>
+			</extensions>
 		</plugins>
 	</build>
 
