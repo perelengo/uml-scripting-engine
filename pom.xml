@@ -343,15 +343,15 @@
 					<checkModificationExcludes>**/THIRD-PARTY.properties</checkModificationExcludes>
 				</configuration>
 			</plugin>
-			<extensions>
-				<!-- Enabling the use of SSH -->
-				<extension>
-					<groupId>org.apache.maven.wagon</groupId>
-					<artifactId>wagon-ssh-external</artifactId>
-					<version>2.12</version>
-				</extension>
-			</extensions>
 		</plugins>
+		<extensions>
+			<!-- Enabling the use of SSH -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>2.12</version>
+			</extension>
+		</extensions>
 	</build>
 
 	<scm>
