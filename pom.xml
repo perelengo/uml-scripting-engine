@@ -289,40 +289,40 @@
 					</execution>
 				</executions>
 			</plugin>
-<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>3.1.2</version>
-						<executions>
-							<execution>
-								<id>copy-dependencies</id>
-								<phase>install</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/dist/lib/</outputDirectory>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-jar</id>
-								<phase>install</phase>
-								<goals>
-									<goal>copy</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>net.samsarasoftware.scripting</groupId>
-											<artifactId>uml-scripting-engine</artifactId>
-											<version>${pom.version}</version>
-										</artifactItem>
-									</artifactItems>
-									<outputDirectory>${project.build.directory}/dist/</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/dist/lib/</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-jar</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>net.samsarasoftware.scripting</groupId>
+									<artifactId>uml-scripting-engine</artifactId>
+									<version>${pom.version}</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/dist/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -334,4 +334,14 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<scm>
+		<developerConnection>scm:git:https://github.com/perelengo/net.samsarasoftware.uml-scripting-engine.git</developerConnection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>maven3.samsara-software.es</id>
+			<url>scpexe://maven3.samsara-software.es:22/home/maven3/www/public_html/repository</url>
+		</repository>
+	</distributionManagement>
 </project>
