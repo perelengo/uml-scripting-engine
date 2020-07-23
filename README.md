@@ -1,7 +1,6 @@
 # uml-scripting-engine
 Executes uml transformations defined with a profile.
 
-Contains unfinished code.
 
 This project is part of https://www.samsara-software.es tools and has been freed in honor to my newborn daughter.
 
@@ -84,7 +83,7 @@ External transformations are applied to external models.
 
 
 ### Internal transformations
-TO-DO
+23/07/2020 JUnit test case created
 
 ### External transformations
 TO-DO
@@ -103,9 +102,7 @@ TO-DO
 
 ## Components
 ### uml2qvto.xsl
-Transpiles the uml2qvto profile applications to a qvto transformation.
-
-This transformation is finished and works.
+Transpiles the uml2qvto profile applications to a qvto 
 
 #### Development requirements
 It is necessary to clone and execute mvn clean install on [net.samsarasoftware.install-dependencies](https://github.com/perelengo/net.samsarasoftware.install-dependencies) to install all eclipse plugins dependencies as maven dependencies.
@@ -118,8 +115,6 @@ To develop the uml2qto.xsl: JDK>=1.7 + Xalan-2.7.1 + org.apache.bsf:bsf:2.4 + or
 Processes the input UML scripting model to generate the corresponding qvto, and then executes the qvto transformation.
 
 The XSLexecution code needs testing, because haven't tested already since the inclusion of the BSF libraries.
-
-The qvto execution code works.
 
 #### Development requirements
 It is necessary to clone and execute mvn clean install on [net.samsarasoftware.install-dependencies](https://github.com/perelengo/net.samsarasoftware.install-dependencies) to JDK>=1.7
