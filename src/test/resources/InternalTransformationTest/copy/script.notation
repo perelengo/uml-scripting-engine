@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/papyrus/infra/viewpoints/policy/style" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_RVQAsMztEeqmrbZwnausIQ" type="PapyrusUMLClassDiagram" name="ClassDiagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_ST8dkMztEeqmrbZwnausIQ" type="2006">
+    <children xmi:type="notation:DecorationNode" xmi:id="_SUFAcMztEeqmrbZwnausIQ" type="5023"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_SUFAccztEeqmrbZwnausIQ" type="8508">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_SUFAcsztEeqmrbZwnausIQ" y="5"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_SUFngMztEeqmrbZwnausIQ" type="7015">
+      <children xmi:type="notation:Shape" xmi:id="_TmAiYMztEeqmrbZwnausIQ" type="3017">
+        <element xmi:type="uml:EnumerationLiteral" href="script.uml#_TkwlMMztEeqmrbZwnausIQ"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_TmAiYcztEeqmrbZwnausIQ"/>
+      </children>
+      <children xmi:type="notation:Shape" xmi:id="_T6bTMMztEeqmrbZwnausIQ" type="3017">
+        <element xmi:type="uml:EnumerationLiteral" href="script.uml#_T6WasMztEeqmrbZwnausIQ"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_T6bTMcztEeqmrbZwnausIQ"/>
+      </children>
+      <children xmi:type="notation:Shape" xmi:id="_UPRh0MztEeqmrbZwnausIQ" type="3017">
+        <element xmi:type="uml:EnumerationLiteral" href="script.uml#_UPLbMMztEeqmrbZwnausIQ"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_UPRh0cztEeqmrbZwnausIQ"/>
+      </children>
+      <styles xmi:type="notation:TitleStyle" xmi:id="_SUFngcztEeqmrbZwnausIQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_SUFngsztEeqmrbZwnausIQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_SUFng8ztEeqmrbZwnausIQ"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_SUFnhMztEeqmrbZwnausIQ"/>
+    </children>
+    <element xmi:type="uml:Enumeration" href="script.uml#_PoSvoMztEeqmrbZwnausIQ"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ST8dkcztEeqmrbZwnausIQ" x="173" y="79"/>
+  </children>
+  <styles xmi:type="notation:StringValueStyle" xmi:id="_RVQAscztEeqmrbZwnausIQ" name="diagram_compatibility_version" stringValue="1.1.0"/>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_RVQAssztEeqmrbZwnausIQ"/>
+  <styles xmi:type="style:PapyrusViewStyle" xmi:id="_RVQAs8ztEeqmrbZwnausIQ">
+    <owner xmi:type="uml:Model" href="script.uml#_jGEMYMzsEeqmrbZwnausIQ"/>
+  </styles>
+  <element xmi:type="uml:Model" href="script.uml#_jGEMYMzsEeqmrbZwnausIQ"/>
+</notation:Diagram>

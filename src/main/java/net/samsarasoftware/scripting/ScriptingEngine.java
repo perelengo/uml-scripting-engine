@@ -288,7 +288,9 @@ public class ScriptingEngine {
      *
      */
     public void registerPackages(ResourceSet resourceSet) {
-        
+    	//Classes used to guess classpath configuration
+    	String resourcesPlugin = "org/eclipse/uml2/uml/resources/ResourcesPlugin.class";
+        URL resourcesPluginUrl = this.getClass().getClassLoader().getResource( resourcesPlugin );
         
         Map uriMap = resourceSet.getURIConverter().getURIMap();
 
@@ -296,27 +298,65 @@ public class ScriptingEngine {
         //All this stuff is necessary to workin standalone mode (without eclipse), but also enables the application to run inside eclipse
         //resolving references of type plugin and of type resource, in maven projects, whose compiled resources are usually in target/classes folder
         if(!EMFPlugin.IS_ECLIPSE_RUNNING){
+        	
+        	
+        	//Some times the classpath of the classloader is not enough to resolve all classpath plugins.
+        	//An example of this is when classpath is referenced through one of the jar's MANIFEST.MF Class-Path directive.
+        	//To detect this issue, try to find the ResourcesPlugin.class in the contextClassloaderClasspath
+        	//if the containing jar is not found in the classloader classpath URLs,
+        	//then use the java.class.path system property and join both classpaths
+        	//java.class.path system property is not used by default due to some limitations for example when exporting this project as runnable jar from eclipse with all dependencies bundled in the jar, because the jar handles the classpath in a special incompatible way.....
+        	
         	String[] cpFiles=null;
         	
         	URLClassLoader classLoader=(URLClassLoader) (Thread.currentThread().getContextClassLoader());
             ExtensionProcessor.process(classLoader);
             	
             String classpath = null;
+            classpath = System.getProperty("java.class.path");
+            String[] cpFiles1 = classpath.split(";");
+            
+            boolean extendClassLoaderClassPath=true;
             try
             {
             	URL[] ucp=classLoader.getURLs();
-    	        cpFiles=new String[ucp.length];
-
+        		String[] cpFiles2 = new String[ucp.length];
+            	
+        		//Path of the jar containing the ResourcesPlugin.class
+            	String resourcesPluginJarPath=resourcesPluginUrl.getPath().substring(0,resourcesPluginUrl.getPath().indexOf("!"));
+            	
+            	//fetch ResourcesPlugin.class containing jar in classloader classpath urls
             	for (int i=0;i<ucp.length;i++) {
-					cpFiles[i]=ucp[i].toString();
+            		//if found, then won't use system property classpath
+					if(ucp[i].toString().equals(resourcesPluginJarPath))
+						extendClassLoaderClassPath=false;
 				}
+            	for (int i=0;i<ucp.length;i++) {
+					cpFiles2[i]=ucp[i].toString();
+            	}
+            	
+            	
+            	
+            	if(extendClassLoaderClassPath)
+            		cpFiles=new String[cpFiles1.length+cpFiles2.length];
+            	else
+            		cpFiles=new String[cpFiles2.length];
+            	
+            	for (int i=0;i<cpFiles2.length;i++) {
+					cpFiles[i]=ucp[i].toString();
+            	}
+            	if(extendClassLoaderClassPath){
+	                for (int i=0;i<cpFiles1.length;i++) {
+						cpFiles[i+cpFiles2.length]=cpFiles1[i];
+						
+					}
+            	}
             }
             catch (Throwable throwable)
             {
               // Failing thet, get it from the system properties.
               throwable.printStackTrace();
-              classpath = System.getProperty("java.class.path");
-              cpFiles=classpath.split(";");
+              
             }
         	
 	        Pattern bundleSymbolNamePattern = Pattern.compile("^\\s*Bundle-SymbolicName\\s*:\\s*([^\\s;]*)\\s*(;.*)?$", Pattern.MULTILINE);
@@ -475,19 +515,19 @@ public class ScriptingEngine {
     	
         
         //Register basic libraries uri handlers
-        String resourcesPlugin = "org/eclipse/uml2/uml/resources/ResourcesPlugin.class";
-        URL url = this.getClass().getClassLoader().getResource( resourcesPlugin );
-        String baseUrl = url.toString();    
+        String baseUrl = resourcesPluginUrl.toString();    
         baseUrl = baseUrl.substring( 0, baseUrl.length() - resourcesPlugin.length() );
         URI baseUri=URI.createURI(baseUrl);
         uriMap.put(URI.createURI( UMLResource.LIBRARIES_PATHMAP ), baseUri.appendSegment( "libraries" ).appendSegment( "" ));
         uriMap.put(URI.createURI( UMLResource.METAMODELS_PATHMAP ), baseUri.appendSegment( "metamodels" ).appendSegment( "" ));
         uriMap.put(URI.createURI( UMLResource.PROFILES_PATHMAP ), baseUri.appendSegment( "profiles" ).appendSegment( "" ));
-        try {
-			registerJarProfiles(resourceSet,baseUrl.replace("jar:file:/","").replace("!/", ""));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+//Duplicated job after processing classpath
+//        try {
+//			registerJarProfiles(resourceSet,baseUrl.replace("jar:file:/","").replace("!/", ""));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
   
         UMLPlugin.getEPackageNsURIToProfileLocationMap().put(org.eclipse.uml2.uml.profile.standard.StandardPackage.eINSTANCE.getNsURI()
         		, URI.createURI("pathmap://UML_PROFILES/Standard.profile.uml#_0"));
