@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -83,9 +84,10 @@ public class ScriptingEngine {
 	private String TARGET_MODEL = null;
 	public String OUTPUT;
 	public List<Param> INPUT=new ArrayList<Param>();
+	ResourceSet resourceSet;
 
 
-	private void parseParams(String[] args) throws Exception {
+	void parseParams(String[] args) throws Exception {
 		if (args.length < 4)
 			printUsage();
 
@@ -131,7 +133,7 @@ public class ScriptingEngine {
 				);
 	}
 
-	private File runCompile() throws Exception {
+	File runCompile() throws Exception {
 		InputStream bais =null;
 		try {
 			
@@ -175,14 +177,14 @@ public class ScriptingEngine {
 		}
 	}
 	
-	private void runTransform(File qvto) throws Exception {
+	void runTransform(File qvto) throws Exception {
 		try {
 			
 			//Inicio de transformación QVTO
 			InternalTransformationExecutor executor = new InternalTransformationExecutor(URI.createFileURI(qvto.getAbsolutePath()));
 
 			ExecutionContextImpl context = new ExecutionContextImpl();
-			ResourceSet resourceSet = new ResourceSetImpl();
+			resourceSet = new ResourceSetImpl();
 			registerResourceFactories(resourceSet);
 			registerPackages(resourceSet);
 
@@ -214,27 +216,30 @@ public class ScriptingEngine {
 						
 //						//PJR: Al ser un entorno standalone, las URLs de los perfiles se transforman a URLs del sistema de ficheros.
 //						//Convertimos las URLs del sistema de ficheros al URLs de plugin de la plataforma
-//						InputStream fis=new FileInputStream(modelExtent.getUri().toFileString());
-//						ByteArrayOutputStream baos3=new ByteArrayOutputStream();
-//						byte buf[]=new byte[10240];
-//						int readed=0;
-//						while((readed=fis.read(buf))!=-1){
-//							baos3.write(buf,0,readed);
-//						}
-//						try{
-//							fis.close();
-//						}catch(Exception e){}
-//						
-//						String content=baos3.toString();
-//						String replacedContent;
-//						String replacedContent2;
-//						replacedContent=content.replaceAll("jar([^\\s]*)net.samsarasoftware.metamodels([^\\s]*)jar!", "platform:/plugin/net.samsarasoftware.metamodels");
-//						replacedContent=replacedContent.replaceAll("jar([^\\s]*)Standard.profile.uml#_0", "pathmap://UML_PROFILES/Standard.profile.uml#_0");
-//						FileOutputStream fos=new FileOutputStream(modelExtent.getUri().toFileString());
-//						fos.write(replacedContent.getBytes());
-//						try{
-//							fos.close();
-//						}catch(Exception e){}
+						InputStream fis=new FileInputStream(modelExtent.getUri().toFileString());
+						ByteArrayOutputStream baos3=new ByteArrayOutputStream();
+						byte buf[]=new byte[10240];
+						int readed=0;
+						while((readed=fis.read(buf))!=-1){
+							baos3.write(buf,0,readed);
+						}
+						try{
+							fis.close();
+						}catch(Exception e){}
+						
+						String content=baos3.toString();
+						String replacedContent=content;
+						String replacedContent2;
+						for (Entry<URI,URI> e : resourceSet.getURIConverter().getURIMap().entrySet()) {
+							replacedContent=replacedContent.replace(e.getValue().toString(),e.getKey().toString());
+						}
+						//replacedContent=content.replaceAll("jar([^\\s]*)net.samsarasoftware.metamodels([^\\s]*)jar!", "platform:/plugin/net.samsarasoftware.metamodels");
+						//replacedContent=replacedContent.replaceAll("jar([^\\s]*)Standard.profile.uml#_0", "pathmap://UML_PROFILES/Standard.profile.uml#_0");
+						FileOutputStream fos=new FileOutputStream(modelExtent.getUri().toFileString());
+						fos.write(replacedContent.getBytes());
+						try{
+							fos.close();
+						}catch(Exception e){}
 						
 					}
 

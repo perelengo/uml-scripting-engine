@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:uml2qvto="http://www.samsarasoftware.net/uml2qvto.profile" xsi:schemaLocation="http://www.samsarasoftware.net/uml2qvto.profile platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_fl4lAERGEeqJ4ehp_CdGCQ">
+  <uml:Model xmi:id="_jGEMYMzsEeqmrbZwnausIQ" name="InternalTransformationTest">
+    <packagedElement xmi:type="uml:Package" xmi:id="_o-v3AMzsEeqmrbZwnausIQ" name="'+__elem1.name+'"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_sNnmwMzsEeqmrbZwnausIQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sNx-0MzsEeqmrbZwnausIQ" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-0czsEeqmrbZwnausIQ" key="Version" value="0.0.9"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-0szsEeqmrbZwnausIQ" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-08zsEeqmrbZwnausIQ" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-1MzsEeqmrbZwnausIQ" key="Date" value="2020-01-31"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-1czsEeqmrbZwnausIQ" key="Author" value=""/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sNqDAMzsEeqmrbZwnausIQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_fl4lAERGEeqJ4ehp_CdGCQ"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_r8RqsEkIEeaTA5UuzSJfaA"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_TqcBQNAgEeqmrbZwnausIQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_TqcoUNAgEeqmrbZwnausIQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+    </profileApplication>
+  </uml:Model>
+  <uml2qvto:QvtoAdditionalOperations xmi:id="_zwRf4MzsEeqmrbZwnausIQ" qvto="query getEnumeration1Literals( model : uml::Model ) : Set ( EnumerationLiteral ) {&#xD;&#xA;&#x9;return model.allOwnedElements()&#xD;&#xA;      ->selectByType(uml::Enumeration)&#xD;&#xA;      ->any(e | e.name = 'Enumeration1' ).ownedLiteral&#xD;&#xA;}&#xD;&#xA;" base_Model="_jGEMYMzsEeqmrbZwnausIQ"/>
+  <uml2qvto:QvtoTemplate xmi:id="_WfssUMztEeqmrbZwnausIQ" base_Element="_o-v3AMzsEeqmrbZwnausIQ" target="model">
+    <selector>getEnumeration1Literals(model)</selector>
+  </uml2qvto:QvtoTemplate>
+  <standard:Framework xmi:id="_VbE4cNAgEeqmrbZwnausIQ" base_Package="_o-v3AMzsEeqmrbZwnausIQ"/>
+</xmi:XMI>
