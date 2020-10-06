@@ -84,11 +84,14 @@ External transformations are applied to external models.
 
 ### Internal transformations
 23/07/2020 JUnit test case created
+
 06/10/2020 JUnit test case added validation with OCL queries
 
 ### External transformations
 23/07/2020 JUnit test case created
+
 06/10/2020 JUnit test case added validation with OCL queries
+
 StandardProfileApplication test created.
 
 ### Querying elements
