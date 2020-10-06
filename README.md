@@ -84,9 +84,12 @@ External transformations are applied to external models.
 
 ### Internal transformations
 23/07/2020 JUnit test case created
+06/10/2020 JUnit test case added validation with OCL queries
 
 ### External transformations
-TO-DO
+23/07/2020 JUnit test case created
+06/10/2020 JUnit test case added validation with OCL queries
+StandardProfileApplication test created.
 
 ### Querying elements
 TO-DO
@@ -114,7 +117,6 @@ To develop the uml2qto.xsl: JDK>=1.7 + Xalan-2.7.1 + org.apache.bsf:bsf:2.4 + or
 ### net.samsarasoftware.scripting.ScriptingEngine
 Processes the input UML scripting model to generate the corresponding qvto, and then executes the qvto transformation.
 
-The XSLexecution code needs testing, because haven't tested already since the inclusion of the BSF libraries.
 
 #### Development requirements
 It is necessary to clone and execute mvn clean install on [net.samsarasoftware.install-dependencies](https://github.com/perelengo/net.samsarasoftware.install-dependencies) to JDK>=1.7
