@@ -8,6 +8,39 @@ To use this tool, need to use the uml2qvto profile available at [net.samsarasoft
 
 As soon as possible I have more time, will add info on how to use it in simple and advanced modes.
 
+
+## How-to
+The transpiler can generate internal or external transformations.
+
+Internal transformations are applied to the same model the profile is applied to.
+
+External transformations are applied to external models.
+
+
+### Internal transformations
+23/07/2020 JUnit test case created
+
+06/10/2020 JUnit test case added validation with OCL queries
+
+### External transformations
+23/07/2020 JUnit test case created
+
+06/10/2020 JUnit test case added validation with OCL queries
+
+StandardProfileApplication test created.
+
+### Querying elements
+TO-DO
+
+### Temlating content
+TO-DO
+
+### Updating content
+TO-DO
+
+### Removing content
+TO-DO
+
 ## Run
 JDK > 1.7
 
@@ -74,37 +107,6 @@ java -cp "./target/dist/lib/*;./target/dist/uml-scripting-engine-0.2.0-SNAPSHOT.
  
 
 
-## How-to
-The transpiler can generate internal or external transformations.
-
-Internal transformations are applied to the same model the profile is applied to.
-
-External transformations are applied to external models.
-
-
-### Internal transformations
-23/07/2020 JUnit test case created
-
-06/10/2020 JUnit test case added validation with OCL queries
-
-### External transformations
-23/07/2020 JUnit test case created
-
-06/10/2020 JUnit test case added validation with OCL queries
-
-StandardProfileApplication test created.
-
-### Querying elements
-TO-DO
-
-### Temlating content
-TO-DO
-
-### Updating content
-TO-DO
-
-### Removing content
-TO-DO
 
 ## Components
 ### uml2qvto.xsl
