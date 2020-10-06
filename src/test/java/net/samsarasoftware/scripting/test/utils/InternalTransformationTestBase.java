@@ -1,4 +1,4 @@
-package net.samsarasoftware.scripting;
+package net.samsarasoftware.scripting.test.utils;
 
 /*-
  * #%L
@@ -29,41 +29,42 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EOperation;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.ocl.OCL;
-import org.eclipse.ocl.ParserException;
-import org.eclipse.ocl.ecore.Constraint;
-import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
-import org.eclipse.ocl.expressions.OCLExpression;
-import org.eclipse.ocl.helper.OCLHelper;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.internal.impl.ModelImpl;
 import org.junit.Before;
-import org.junit.Test;
 
-public class InternalTransformationTest {
+import net.samsarasoftware.scripting.ScriptingEngine;
 
-	String script = null;
 
+/**
+ * Abstract internal transformation test
+ * @author pere joseph rodríguez
+ *
+ */
+public abstract class InternalTransformationTestBase {
+
+	protected String	scriptPath 	= null;
+	protected OCLTool 	oclTool		= null;
+	protected ResourceSet transformedResourceSet = null;
+	protected ModelImpl resultModel = null;
+	
 	@Before
 	public void initialize() {
-		String internalScriptPath = "/" + this.getClass().getSimpleName() + "/script.uml";
+		String internalScriptPath =  this.getClass().getSimpleName() + "/script.uml";
 		URL scriptUrl = this.getClass().getResource(internalScriptPath);
 		if (scriptUrl != null){
 			File tempCopy;
 			try {
-				tempCopy = File.createTempFile("InternalTransformationTest-script", ".uml");
+				tempCopy = File.createTempFile(this.getClass().getSimpleName()+"-script", ".uml");
 				FileOutputStream tempCopyFileOutputStream = new FileOutputStream(tempCopy);
 				IOUtils.copy(scriptUrl.openStream(), tempCopyFileOutputStream);
 				
 				
-					script = tempCopy.getPath();
+					scriptPath = tempCopy.getPath();
 				
 			} catch (IOException e) {
 				fail(e.getMessage());
@@ -72,43 +73,31 @@ public class InternalTransformationTest {
 			fail("Faled to get resource: " + internalScriptPath);
 		}
 		
+		prepareTest();
 	}
 
-	@Test
-	public void run() {
+	protected void prepareTest() {
 		
 		ScriptingEngine scriptingEngine = new ScriptingEngine();
 		
 		runTransform(scriptingEngine);
 		
-		ResourceSet trasnformedResourceSet = refreshResourceSet(scriptingEngine);
+		transformedResourceSet = refreshResourceSet(scriptingEngine);
 		
-		OCLTool oclTool = null;
-		ModelImpl modelEClassifier = null;
+		
 		try{
 			//get the transformed resource
-			Resource resource = trasnformedResourceSet.getResource(URI.createFileURI(script), true);
+			Resource resource = transformedResourceSet.getResource(URI.createFileURI(scriptPath), true);
 			//get the context classifier
-			modelEClassifier=(ModelImpl) EcoreUtil.getObjectByType(resource.getContents(),UMLPackage.Literals.MODEL);
+			resultModel=(ModelImpl) EcoreUtil.getObjectByType(resource.getContents(),UMLPackage.Literals.MODEL);
 			// create an OCLTool
-			oclTool=new OCLTool((EClass) modelEClassifier.eClass(), trasnformedResourceSet.getPackageRegistry());
+			oclTool=new OCLTool((EClass) resultModel.eClass(), transformedResourceSet.getPackageRegistry());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(5);
 		}
-		
-		
-		try {
-			String validation1="self.name='InternalTransformationTest'";
-			if( ((boolean)oclTool.evaluateQuery(validation1,modelEClassifier))!=true )
-				fail("Vaidation failed: "+validation1);
-		} catch (ParserException e) {
-			fail(e.getMessage());
-			e.printStackTrace();
-		}
-		
-		
 	}
+
 
 	private ResourceSet refreshResourceSet(ScriptingEngine scriptingEngine) {
 		ResourceSet transformedResourceSet = null;
@@ -124,8 +113,8 @@ public class InternalTransformationTest {
 		return transformedResourceSet;
 	}
 
-	private void runTransform(ScriptingEngine scriptingEngine) {
-		String[] args = new String[] { "-script", script, "-in", "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml" };
+	protected void runTransform(ScriptingEngine scriptingEngine) {
+		String[] args = getTransformArgs();
 		
 		try {
 			scriptingEngine.parseParams(args);
@@ -150,4 +139,19 @@ public class InternalTransformationTest {
 			System.exit(3);
 		}	
 	}
+
+	/**
+	 * Override to generate tests.
+	 * The args should always start with the following array new String[]{		
+				"-script"
+				,scriptPath
+				,"-model"
+				,outputModelPath.getPath()
+				,"-in"
+				,"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
+				};
+				
+	 * @return
+	 */
+	protected abstract String[] getTransformArgs();
 }

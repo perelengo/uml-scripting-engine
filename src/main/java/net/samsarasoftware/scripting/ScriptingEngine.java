@@ -2,7 +2,6 @@ package net.samsarasoftware.scripting;
 
 
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
@@ -10,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -87,7 +85,7 @@ public class ScriptingEngine {
 	ResourceSet resourceSet;
 
 
-	void parseParams(String[] args) throws Exception {
+	public void parseParams(String[] args) throws Exception {
 		if (args.length < 4)
 			printUsage();
 
@@ -133,7 +131,7 @@ public class ScriptingEngine {
 				);
 	}
 
-	File runCompile() throws Exception {
+	public File runCompile() throws Exception {
 		InputStream bais =null;
 		try {
 			
@@ -177,7 +175,7 @@ public class ScriptingEngine {
 		}
 	}
 	
-	void runTransform(File qvto) throws Exception {
+	public void runTransform(File qvto) throws Exception {
 		try {
 			
 			//Inicio de transformación QVTO
