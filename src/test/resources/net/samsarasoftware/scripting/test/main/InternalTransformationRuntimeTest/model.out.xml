@@ -1,1 +1,143 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+
+modeltype uml uses "http://www.eclipse.org/uml2/5.0.0/UML";
+modeltype umlPrimitiveTypes uses "http://www.eclipse.org/uml2/5.0.0/UML";
+
+
+
+transformation InternalTransformationRuntimeTest(
+	
+	inout file : uml
+	, in umlPrimitiveTypesFile:umlPrimitiveTypes
+	
+		,inout inout1 : uml
+	
+		,out out1 : uml
+	
+	
+);
+
+
+property allModels:Collection(uml::Model)=file.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model).allOwnedElements()->collect(e | e.oclAsType(Element).getRelationships())->collect( e | e.relatedElement)->collect(e | e.getModel())->asSet();
+
+
+main(){
+	file.objects()->select(e | e.oclIsTypeOf(uml::Model))->forEach(__model){
+		var model:uml::Model;
+		model:=__model.oclAsType(Model);
+		
+		
+		
+		
+		
+		model.map InternalTransformationRuntimeTest(model);
+	};
+};
+
+/** BEGIN Utility method used in the generated script **/
+
+mapping Element::setStereotypeByQualifiedName(qualifiedStereotypeName : String)  {
+	var st:=self.getApplicableStereotype(qualifiedStereotypeName);
+	self.applyStereotype(st);
+}
+
+mapping Element::setTaggedValueByStereotypeQualifiedName(qualifiedStereotypeName : String, qualifiedTaggedValueName : String, value : OclAny)  {
+	var st:=self.getApplicableStereotype(qualifiedStereotypeName);
+	self.setValue(st, qualifiedTaggedValueName, value);
+}
+
+mapping Element::setTaggedValueByStereotypeQualifiedName(qualifiedStereotypeName : String, qualifiedTaggedValueName : String, value : Collection(String))  {
+	var st:=self.getApplicableStereotype(qualifiedStereotypeName);
+	Sequence{0..value->size()-1}->forEach(i){
+		self.setValue(st, qualifiedTaggedValueName+'['+i.toString()+']', value->asSequence()->at(i+1));
+	}
+}
+
+query  getStereotype (elem : Element, qualifiedName : String) : Stereotype { 
+	elem.getAppliedStereotypes()->select(s | 
+		getStereotypeHierarchy(s.oclAsType(Stereotype))
+		->exists(sh | 
+			sh.oclAsType(Stereotype).qualifiedName=qualifiedName
+		)
+	)->asSequence()->at(1).oclAsType(Stereotype)
+}
+query getStereotypeHierarchy(st : Stereotype) : Sequence(Stereotype) { 
+	if(st.general->size()>0) then
+		st.general->select(u | u.oclIsTypeOf(Stereotype))->collect(u | getStereotypeHierarchy(u.oclAsType(Stereotype)))->asSequence()->append(st)
+	else
+		Sequence{st}
+	endif
+}
+/** END Utility method used in the generated script **/
+
+/** BEGIN : Reference-resolvers **/
+	
+			
+mapping Enumeration(n : String) : uml::Enumeration{
+	name:=n;
+};
+	
+				
+mapping EnumerationLiteral(n : String) : uml::EnumerationLiteral{
+	name:=n;
+};
+	
+			
+mapping Package(n : String) : uml::Package{
+	name:=n;
+};
+	
+/** END: Reference-resolvers **/
+	
+/** BEGIN : User-defined additional methods **/
+	
+query getEnumeration1Literals( model : uml::Model ) : Set ( EnumerationLiteral ) {
+	return model.allOwnedElements()
+      ->selectByType(uml::Enumeration)
+      ->any(e | e.name = 'Enumeration1' ).ownedLiteral
+}
+
+/** END: User-defined additional methods **/
+
+/** BEGIN : User-defined queries **/
+	
+/** END : User-defined queries **/
+
+mapping inout Package::InternalTransformationRuntimeTest(
+inout model : uml::Model
+) {
+
+	// ignore as variable 
+	var	_PoSvoMztEeqmrbZwnausIQ:uml::Enumeration;
+	var	_TkwlMMztEeqmrbZwnausIQ:uml::EnumerationLiteral;
+	var	_T6WasMztEeqmrbZwnausIQ:uml::EnumerationLiteral;
+	var	_UPLbMMztEeqmrbZwnausIQ:uml::EnumerationLiteral;
+	var	_o_v3AMzsEeqmrbZwnausIQ:uml::Package;
+
+
+
+		//qvtoTemplate _o-v3AMzsEeqmrbZwnausIQ
+		getEnumeration1Literals(model)->forEach(__elem1){
+			_o_v3AMzsEeqmrbZwnausIQ :=null;
+			_o_v3AMzsEeqmrbZwnausIQ := map Package('InternalTransformationRuntimeTest_'+__elem1.name+'_0');
+
+			model.packagedElement+=object _o_v3AMzsEeqmrbZwnausIQ :uml::Package{
+				name:= 'InternalTransformationRuntimeTest_'+__elem1.name+'_0';
+					
+			};
+
+		};
+
+    
+    
+		getEnumeration1Literals(model)->forEach(__elem1){
+			map Package('InternalTransformationRuntimeTest_'+__elem1.name+'_0').name:=''+__elem1.name+'';
+			map Package('InternalTransformationRuntimeTest_'+__elem1.name+'_0').name:=''+__elem1.name+'';
+
+		};
+
+    
+  
+}

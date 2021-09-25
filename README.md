@@ -4,7 +4,7 @@ Executes uml transformations defined with a profile.
 
 This project is part of https://www.samsara-software.es tools and has been freed in honor to my newborn daughter.
 
-To use this tool, need to use the uml2qvto profile available at [net.samsarasoftware.metamodels 0.2.0](https://github.com/perelengo/net.samsarasoftware.metamodels/tree/net.samsarasoftware.metamodels-0.2.0) version's repository, or eclipse update-site http://updates.samsara-software.es/eclipse/
+To use this tool, need to use the uml2qvto profile available at [net.samsarasoftware.metamodels 0.2.1](https://github.com/perelengo/net.samsarasoftware.metamodels/tree/net.samsarasoftware.metamodels-0.2.1) version's repository, or eclipse update-site http://updates.samsara-software.es/eclipse/
 
 As soon as possible I have more time, will add info on how to use it in simple and advanced modes.
 

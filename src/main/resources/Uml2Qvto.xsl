@@ -24,9 +24,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:common="http://exslt.org/common"
-	xmlns:java="http://xml.apache.org/xalan/java"
 	xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    exclude-result-prefixes="common java"
+    exclude-result-prefixes="common"
     xmlns:xalan="http://xml.apache.org/xslt"
     xmlns:regex="http://www.samsara-software.es/XSLT/extend/regex"
 	>
@@ -44,7 +43,10 @@
 	</xalan:component>
 	
 	<xsl:output method="text" encoding="UTF-8" />
-
+	<xsl:param name="in_files" />
+	<xsl:param name="inout_files" />
+	<xsl:param name="out_files" />
+	
 	<xsl:variable name="root" select="/" />
 	<xsl:variable name="umlMetamodel" select="document('metamodels/http__www.eclipse.org_uml2_5_0_0_UML.ecore')"/>
 	<xsl:template match="/">
@@ -76,12 +78,67 @@ transformation <xsl:apply-templates select="@name" mode="normalize-id"/>(
 	inout file : uml
 	, in umlPrimitiveTypesFile:umlPrimitiveTypes
 	<xsl:apply-templates select="//*[namespace-uri()!='http://www.omg.org/spec/XMI/20131001' and namespace-uri()!='' and namespace-uri()!='http://www.eclipse.org/uml2/5.0.0/UML'  and namespace-uri()!='http://www.samsarasoftware.net/uml2qvto.profile']" mode="transformation-profiles-params"/>
-	
+	<xsl:variable name="in_files_arr">
+		<xsl:call-template name="split">
+			<xsl:with-param name="text" select="$in_files"/>
+			<xsl:with-param name="splitChar" select="';'"/>
+		</xsl:call-template>
+	</xsl:variable>
+	<xsl:variable name="inout_files_arr">
+		<xsl:call-template name="split">
+			<xsl:with-param name="text" select="$inout_files"/>
+			<xsl:with-param name="splitChar" select="';'"/>
+		</xsl:call-template>
+	</xsl:variable>
+	<xsl:variable name="out_files_arr">
+		<xsl:call-template name="split">
+			<xsl:with-param name="text" select="$out_files"/>
+			<xsl:with-param name="splitChar" select="';'"/>
+		</xsl:call-template>
+	</xsl:variable>
+	<xsl:for-each select="common:node-set($in_files_arr)//text">
+		<xsl:if test="not(.='')">
+		//<xsl:value-of select="."/> 
+		,in inFile<xsl:value-of select="position()"/> : uml
+		</xsl:if>
+	</xsl:for-each>
+	<xsl:for-each select="common:node-set($inout_files_arr)//text">
+		<xsl:if test="not(.='')">
+		//<xsl:value-of select="."/> 
+		,inout inoutFile<xsl:value-of select="position()"/> : uml
+		</xsl:if>
+	</xsl:for-each>
+	<xsl:for-each select="common:node-set($out_files_arr)//text">
+		<xsl:if test="not(.='')">
+		//<xsl:value-of select="."/> 
+		,out outFile<xsl:value-of select="position()"/> : uml
+		</xsl:if>
+	</xsl:for-each>
 	
 );
 
 <!-- the global variable allModels can be used to resolve external model references -->
 property allModels:Collection(uml::Model)=file.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model).allOwnedElements()->collect(e | e.oclAsType(Element).getRelationships())->collect( e | e.relatedElement)->collect(e | e.getModel())->asSet();
+	<xsl:for-each select="common:node-set($in_files_arr)//text">
+		<xsl:if test="not(.='')">
+//<xsl:value-of select="."/> 
+property inModel<xsl:value-of select="position()"/> : Model = inFile<xsl:value-of select="position()"/>.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model);
+		</xsl:if>
+	</xsl:for-each>
+
+	<xsl:for-each select="common:node-set($inout_files_arr)//text">
+		<xsl:if test="not(.='')">
+//<xsl:value-of select="."/> 
+property inoutModel<xsl:value-of select="position()"/> : Model = inoutFile<xsl:value-of select="position()"/>.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model);
+		</xsl:if>
+	</xsl:for-each>
+
+	<xsl:for-each select="common:node-set($out_files_arr)//text">
+		<xsl:if test="not(.='')">
+//<xsl:value-of select="."/> 
+property outModel<xsl:value-of select="position()"/> : Model = outFile<xsl:value-of select="position()"/>.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model);
+		</xsl:if>
+	</xsl:for-each>
 
 <!-- the main script of the transformation -->
 main(){
@@ -885,7 +942,7 @@ inout model : uml::Model
 				<xsl:with-param name="topElement" select="."/>
 			</xsl:apply-templates>
 			<xsl:value-of select="$template/@template"/><xsl:text>
-</xsl:text><xsl:for-each select="ancestor-or-self::*"><xsl:text>	</xsl:text></xsl:for-each><xsl:if test="$template/@target"><xsl:choose><xsl:when test="contains($template/@target,'(')"><xsl:value-of select="$template/@target"/></xsl:when><xsl:otherwise><xsl:apply-templates select="$template/@target" mode="normalize-id"/></xsl:otherwise></xsl:choose>.</xsl:if><xsl:call-template name="processReservedWords"><xsl:with-param name="input" select="local-name()"/></xsl:call-template>+=object <xsl:apply-templates select="@xmi:id" mode="normalize-id"/> :<xsl:value-of select="substring-before(@xmi:type,':' )" />::<xsl:value-of select="substring-after(@xmi:type,':' )" />{<xsl:text>
+</xsl:text><xsl:for-each select="ancestor-or-self::*"><xsl:text>	</xsl:text></xsl:for-each><xsl:choose><xsl:when test="$template/@target"><xsl:choose><xsl:when test="contains($template/@target,'(')"><xsl:value-of select="$template/@target"/>.</xsl:when><xsl:otherwise><xsl:apply-templates select="$template/@target" mode="normalize-id"/>.</xsl:otherwise></xsl:choose></xsl:when><xsl:otherwise><xsl:if test="$nestingLevel>1"><xsl:apply-templates select="../@xmi:id" mode="normalize-id"/>.</xsl:if></xsl:otherwise></xsl:choose><xsl:call-template name="processReservedWords"><xsl:with-param name="input" select="local-name()"/></xsl:call-template>+=object <xsl:apply-templates select="@xmi:id" mode="normalize-id"/> :<xsl:value-of select="substring-before(@xmi:type,':' )" />::<xsl:value-of select="substring-after(@xmi:type,':' )" />{<xsl:text>
 </xsl:text>
 			<xsl:for-each select="./* | ./@*[not(contains(name(),'xmi'))]" >
 				<xsl:apply-templates select="." mode="struct">
@@ -1218,6 +1275,7 @@ Para crear una referencia, o recuperar una ya creada, a partir del nombre (que s
 	<xsl:variable name="delete" select="/.//*[(name(.)='uml2qvto:QvtoDelete' ) and  ./@base_Element=$xmi_id]"/>
 <!-- <xsl:text>//begin  - initialize-template-struct-vars - </xsl:text><xsl:value-of select="name()"/><xsl:text>
 </xsl:text>	 -->
+
 	<xsl:choose>
 	<xsl:when test="$ignore">
 		<xsl:apply-templates select="./*" mode="initialize-template-struct-vars">
@@ -1303,6 +1361,7 @@ Para crear una referencia, o recuperar una ya creada, a partir del nombre (que s
 	<xsl:variable name="topElement_xmi_id" select="$topElement/@xmi:id"/>
 	<xsl:variable name="xmi_id" select="."/>
 	<xsl:variable name="ref" select="/.//*[@xmi:id=$xmi_id]"/>
+	<xsl:variable name="ignore" select="/.//*[(name(.)='uml2qvto:Ignore'  ) and  ./@base_Element=$xmi_id]"/>
 	<xsl:variable name="notTemplateChild">
 		<xsl:for-each select="$ref/ancestor::* ">
 			 <xsl:variable name="xmi_id2" select="./@xmi:id"/>
@@ -1329,6 +1388,8 @@ Para crear una referencia, o recuperar una ya creada, a partir del nombre (que s
 	<xsl:text>//@</xsl:text><xsl:value-of select="name()"/><xsl:text>
 </xsl:text> -->
 	<xsl:choose>
+	<xsl:when test="$ignore">
+	</xsl:when>
 	<xsl:when test="($notTemplateChild!='' or $notTemplate!='')">
 		<xsl:if test="$ref/@name">
 		<xsl:for-each select="ancestor::*"><xsl:text>	</xsl:text></xsl:for-each><xsl:apply-templates select="$ref/@xmi:id" mode="normalize-id"/> :=null;<xsl:text>
@@ -1377,7 +1438,7 @@ Para crear una referencia, o recuperar una ya creada, a partir del nombre (que s
 </xsl:text>
 <xsl:for-each select="$template//selector">
 <xsl:variable name="level1Count" select="position()"/><xsl:variable name="nestingOffset" select="position()-1"/>
-<xsl:for-each select="ancestor::*"><xsl:text>	</xsl:text></xsl:for-each><xsl:apply-templates select="$template/selector[$level1Count]/text()" mode="normalize-id"/>->forEach(__elem<xsl:value-of select="$nestingLevel+$nestingOffset"/>){<xsl:text>
+<xsl:for-each select="ancestor::*"><xsl:text>	</xsl:text></xsl:for-each><xsl:choose><xsl:when test="contains($template//selector[$level1Count]/text(),'(')"><xsl:value-of select="$template//selector[$level1Count]/text()"/></xsl:when><xsl:otherwise><xsl:apply-templates select="$template//selector[$level1Count]/text()" mode="normalize-id"/></xsl:otherwise></xsl:choose>->forEach(__elem<xsl:value-of select="$nestingLevel+$nestingOffset"/>){<xsl:text>
 </xsl:text>
 </xsl:for-each>
 			<xsl:if test="not($ignoreAll)">
@@ -1644,6 +1705,17 @@ Para crear una referencia, o recuperar una ya creada, a partir del nombre (que s
 	<xsl:value-of select="$out78"/>
 </xsl:template>
 
+<xsl:template match="text()" name="split">
+	<xsl:param name="text" select="."/>
+	<xsl:param name="splitChar" select="';'"/>
+	<xsl:if test="string-length($text)">
+		<text><xsl:value-of select="substring-before(concat($text,$splitChar),$splitChar)"/></text>
+	 	<xsl:call-template name="split">
+	  		<xsl:with-param name="text" select="substring-after($text, $splitChar)"/>
+	  		<xsl:with-param name="splitChar"  select="$splitChar"/>
+	 	</xsl:call-template>
+	</xsl:if>
+</xsl:template>
 
 <!-- BEGIN  Templates for static content
 	Not used anymore

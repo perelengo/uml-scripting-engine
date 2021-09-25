@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:modelview="http://www.samsarasoftware.net/modelview.profile" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmlns:uml2qvto="http://www.samsarasoftware.net/uml2qvto.profile" xsi:schemaLocation="http://www.samsarasoftware.net/modelview.profile modelview.profile.uml#_NPYckDJ8EeuNR60Z_jZTgw http://www.samsarasoftware.net/uml2qvto.profile platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_fl4lAERGEeqJ4ehp_CdGCQ">
+  <uml:Model xmi:id="_jGEMYMzsEeqmrbZwnausIQ" name="AddModelReferencesToAnotherModelTest">
+    <packagedElement xmi:type="uml:Package" xmi:id="_QW3zIC20EeuNR60Z_jZTgw" name="Enumerations of package '+__elem1.name+'">
+      <packagedElement xmi:type="uml:Enumeration" xmi:id="_tgD6cBSHEeuPkNCMp8sB_w" name="'+__elem2.oclAsType(NamedElement).name+'"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_gbJ4cDJ9EeuNR60Z_jZTgw" name="LastPackageSelectorElement">
+      <packagedElement xmi:type="uml:Enumeration" xmi:id="_i15nECvvEeuNR60Z_jZTgw" name="LastEnumerationSelectorElement"/>
+    </packagedElement>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_sNnmwMzsEeqmrbZwnausIQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sNx-0MzsEeqmrbZwnausIQ" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-0czsEeqmrbZwnausIQ" key="Version" value="0.0.9"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-0szsEeqmrbZwnausIQ" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-08zsEeqmrbZwnausIQ" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-1MzsEeqmrbZwnausIQ" key="Date" value="2020-01-31"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sNx-1czsEeqmrbZwnausIQ" key="Author" value=""/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sNqDAMzsEeqmrbZwnausIQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_fl4lAERGEeqJ4ehp_CdGCQ"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="platform:/plugin/com.samsarasoftware.metamodels/profiles/uml2qvto.profile.uml#_r8RqsEkIEeaTA5UuzSJfaA"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_-q-tACvuEeuNR60Z_jZTgw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_-rH28CvuEeuNR60Z_jZTgw" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_-rH28SvuEeuNR60Z_jZTgw" key="Version" value="1.0.0"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_-rH28ivuEeuNR60Z_jZTgw" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_-rH28yvuEeuNR60Z_jZTgw" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_-rH29CvuEeuNR60Z_jZTgw" key="Date" value="2020-11-20"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_-rH29SvuEeuNR60Z_jZTgw" key="Author" value=""/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_-rHP4CvuEeuNR60Z_jZTgw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="modelview.profile.uml#_NPYckDJ8EeuNR60Z_jZTgw"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="modelview.profile.uml#_wiD2ICsgEeuPkNCMp8sB_w"/>
+    </profileApplication>
+  </uml:Model>
+  <uml2qvto:QvtoAdditionalOperations xmi:id="_zwRf4MzsEeqmrbZwnausIQ" qvto="query getEnumeration1Literals( model : uml::Model ) : Set ( EnumerationLiteral ) {&#xD;&#xA;&#x9;return model.allOwnedElements()&#xD;&#xA;      ->selectByType(uml::Enumeration)&#xD;&#xA;      ->any(e | e.name = 'Enumeration1' ).ownedLiteral&#xD;&#xA;}&#xD;&#xA;" base_Model="_jGEMYMzsEeqmrbZwnausIQ"/>
+  <modelview:ViewOf xmi:id="_JgMjECvvEeuNR60Z_jZTgw" base_Element="_tgD6cBSHEeuPkNCMp8sB_w" relatedElement="_i15nECvvEeuNR60Z_jZTgw"/>
+  <uml2qvto:QvtoQuery xmi:id="_lLWbgCvvEeuNR60Z_jZTgw" name="getLastEnumerationSelectorElement" query="query getLastEnumerationSelectorElement( model:uml::Model , elem:Sequence(uml::Element)):uml::Element{&#xD;&#xA;&#x9;return elem->first().oclAsType(uml::Element);&#xD;&#xA;}&#xD;&#xA;" base_Element="_i15nECvvEeuNR60Z_jZTgw"/>
+  <uml2qvto:Ignore xmi:id="_sJkK0CvvEeuNR60Z_jZTgw" base_Element="_i15nECvvEeuNR60Z_jZTgw"/>
+  <uml2qvto:QvtoQuery xmi:id="_TRBQEC20EeuNR60Z_jZTgw" name="allPackagesWithEnumerations" query="query allPackagesWithEnumerations( model:uml::Model , elem:Sequence(uml::Element)):Sequence(uml::Package){&#xD;&#xA;&#x9;let packagesWithEnums:Sequence(Package) = model.allOwnedElements()->select( p | p.oclIsKindOf(Package) and  p.oclAsType(Package).packagedElement->exists( e | e.oclIsTypeOf(uml::Enumeration))).oclAsType(uml::Package)->asSequence() in &#xD;&#xA;&#x9;&#xD;&#xA;&#x9;if(model.ownedElement->exists(e | e.oclIsTypeOf(Enumeration))) then&#xD;&#xA;&#x9;&#x9;return &#x9;packagesWithEnums->append(model)&#xD;&#xA;&#x9;else&#xD;&#xA;&#x9;&#x9;return &#x9;packagesWithEnums&#xD;&#xA;&#x9;endif&#xD;&#xA;}&#xD;&#xA;" base_Element="_QW3zIC20EeuNR60Z_jZTgw"/>
+  <uml2qvto:QvtoTemplate xmi:id="_e9B5UC22EeuNR60Z_jZTgw" template="" base_Element="_QW3zIC20EeuNR60Z_jZTgw">
+    <selector>allPackagesWithEnumerations(inModel1,null)</selector>
+  </uml2qvto:QvtoTemplate>
+  <modelview:ViewContainer xmi:id="_mT9ekDFvEeuNR60Z_jZTgw" base_Element="_QW3zIC20EeuNR60Z_jZTgw" targetElement="_gbJ4cDJ9EeuNR60Z_jZTgw"/>
+  <uml2qvto:QvtoTemplate xmi:id="_bb0PUDF6EeuNR60Z_jZTgw" base_Element="_tgD6cBSHEeuPkNCMp8sB_w">
+    <selector>(__elem1.ownedElement->selectByType(uml::Enumeration))</selector>
+  </uml2qvto:QvtoTemplate>
+  <uml2qvto:Ignore xmi:id="_hMa9UDJ9EeuNR60Z_jZTgw" base_Element="_gbJ4cDJ9EeuNR60Z_jZTgw"/>
+  <uml2qvto:QvtoQuery xmi:id="_isvgkDJ9EeuNR60Z_jZTgw" name="getLastPackageSelectorElement" query="query getLastPackageSelectorElement( model:uml::Model , elem:Sequence(uml::Element)):uml::Package{&#xD;&#xA;&#x9;return elem->first().oclAsType(uml::Package);&#xD;&#xA;}&#xD;&#xA;" base_Element="_gbJ4cDJ9EeuNR60Z_jZTgw"/>
+</xmi:XMI>

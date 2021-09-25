@@ -22,6 +22,7 @@ import org.eclipse.uml2.uml.internal.impl.ModelImpl;
 import org.junit.Before;
 
 import net.samsarasoftware.scripting.ScriptingEngine;
+import net.samsarasoftware.scripting.main.ScriptingEngineLauncher;
 
 /*-
  * #%L
@@ -86,20 +87,29 @@ public abstract class ExternalTransformationTestBase {
 		}else{
 			fail("Faled to get resource: "+internalInputModelPath);
 		}
-
+		customInitialize();
 		prepareTest();
 		
 	}
 	
+	public void customInitialize() {
+		
+	}
+
 	protected void prepareTest() {
 
 		
-		ScriptingEngine scriptingEngine = new ScriptingEngine();
+		ScriptingEngineLauncher scriptingEngine = new ScriptingEngineLauncher();
 		
 		runTransform(scriptingEngine);
 		
 		transformedResourceSet = refreshResourceSet(scriptingEngine);
 		
+		prepareValidation(transformedResourceSet);
+		
+	}
+
+	protected void prepareValidation(ResourceSet transformedResourceSet2) {
 		try{
 			//get the transformed resource
 			Resource resource = transformedResourceSet.getResource(URI.createFileURI(outputModelPath.getPath()), true);
@@ -114,7 +124,7 @@ public abstract class ExternalTransformationTestBase {
 		
 	}
 
-	private ResourceSet refreshResourceSet(ScriptingEngine scriptingEngine) {
+	private ResourceSet refreshResourceSet(ScriptingEngineLauncher scriptingEngine) {
 		ResourceSet transformedResourceSet = null;
 		try {
 			//refresh the ResourceSet with the transformed model
@@ -128,7 +138,7 @@ public abstract class ExternalTransformationTestBase {
 		return transformedResourceSet;
 	}
 
-	protected void runTransform(ScriptingEngine scriptingEngine) {
+	protected void runTransform(ScriptingEngineLauncher scriptingEngine) {
 		String[] args = getTransformArgs();
 		
 		try {
@@ -162,7 +172,7 @@ public abstract class ExternalTransformationTestBase {
 				,scriptPath
 				,"-model"
 				,outputModelPath.getPath()
-				,"-in"
+				,"-dep"
 				,"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
 				};
 	 * @return

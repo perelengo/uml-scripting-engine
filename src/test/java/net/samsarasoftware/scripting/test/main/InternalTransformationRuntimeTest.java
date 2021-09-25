@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.samsarasoftware.scripting.ScriptingEngine;
+import net.samsarasoftware.scripting.main.ScriptingEngineLauncher;
 import net.samsarasoftware.scripting.test.utils.OCLTool;
 
 /**
@@ -77,7 +78,7 @@ public class InternalTransformationRuntimeTest {
 	@Test
 	public void run() {
 		
-		ScriptingEngine scriptingEngine = new ScriptingEngine();
+		ScriptingEngineLauncher scriptingEngine = new ScriptingEngineLauncher();
 		
 		runTransform(scriptingEngine);
 		
@@ -110,7 +111,7 @@ public class InternalTransformationRuntimeTest {
 		
 	}
 
-	private ResourceSet refreshResourceSet(ScriptingEngine scriptingEngine) {
+	private ResourceSet refreshResourceSet(ScriptingEngineLauncher scriptingEngine) {
 		ResourceSet transformedResourceSet = null;
 		try {
 			//refresh the ResourceSet with the transformed model
@@ -124,7 +125,7 @@ public class InternalTransformationRuntimeTest {
 		return transformedResourceSet;
 	}
 
-	private void runTransform(ScriptingEngine scriptingEngine) {
+	private void runTransform(ScriptingEngineLauncher scriptingEngine) {
 		String[] args = new String[] { "-script", script, "-in", "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml" };
 		
 		try {

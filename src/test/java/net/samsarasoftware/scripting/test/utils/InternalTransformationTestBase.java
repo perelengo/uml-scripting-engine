@@ -38,6 +38,7 @@ import org.eclipse.uml2.uml.internal.impl.ModelImpl;
 import org.junit.Before;
 
 import net.samsarasoftware.scripting.ScriptingEngine;
+import net.samsarasoftware.scripting.main.ScriptingEngineLauncher;
 
 
 /**
@@ -78,7 +79,7 @@ public abstract class InternalTransformationTestBase {
 
 	protected void prepareTest() {
 		
-		ScriptingEngine scriptingEngine = new ScriptingEngine();
+		ScriptingEngineLauncher scriptingEngine = new ScriptingEngineLauncher();
 		
 		runTransform(scriptingEngine);
 		
@@ -99,7 +100,7 @@ public abstract class InternalTransformationTestBase {
 	}
 
 
-	private ResourceSet refreshResourceSet(ScriptingEngine scriptingEngine) {
+	private ResourceSet refreshResourceSet(ScriptingEngineLauncher scriptingEngine) {
 		ResourceSet transformedResourceSet = null;
 		try {
 			//refresh the ResourceSet with the transformed model
@@ -113,7 +114,7 @@ public abstract class InternalTransformationTestBase {
 		return transformedResourceSet;
 	}
 
-	protected void runTransform(ScriptingEngine scriptingEngine) {
+	protected void runTransform(ScriptingEngineLauncher scriptingEngine) {
 		String[] args = getTransformArgs();
 		
 		try {
@@ -147,7 +148,7 @@ public abstract class InternalTransformationTestBase {
 				,scriptPath
 				,"-model"
 				,outputModelPath.getPath()
-				,"-in"
+				,"-dep"
 				,"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
 				};
 				

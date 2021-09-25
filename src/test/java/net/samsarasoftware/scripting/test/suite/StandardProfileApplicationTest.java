@@ -52,9 +52,9 @@ public class StandardProfileApplicationTest extends ExternalTransformationTestBa
 				,scriptPath
 				,"-model"
 				,outputModelPath.getPath()
-				,"-in"
+				,"-dep"
 				,"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml"
-				,"-in"
+				,"-dep"
 				,"pathmap://UML_PROFILES/Standard.profile.uml"
 		};
 	}

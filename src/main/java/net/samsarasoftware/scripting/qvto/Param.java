@@ -1,8 +1,10 @@
 package net.samsarasoftware.scripting.qvto;
 
+import org.eclipse.emf.common.util.EList;
+
 /*-
  * #%L
- * net.samsarasoftware.scripting.qvto
+ * net.samsarasoftware.scripting.ScriptingEngine
  * %%
  * Copyright (C) 2014 - 2020 Pere Joseph Rodriguez
  * %%
@@ -21,8 +23,15 @@ limitations under the License.
  */
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.m2m.qvt.oml.BasicModelExtent;
 
+/**
+ * Basic URI Model Extent, to be loaded and saved.
+ *
+ */
 public class Param extends BasicModelExtent{
 		protected URI uri;
 		
@@ -39,10 +48,19 @@ public class Param extends BasicModelExtent{
     		return uri;
     	}
     	
-    
-    	
-        
-        
+    	/**
+    	 * Initializes the content provided in the URI
+    	 * 
+    	 * @param resourceSet
+    	 */
+		public void initialize(ResourceSet resourceSet) {
+			if(getContents()==null || getContents().isEmpty()) {
+				//Si es una URI debemos cargar el contenido
+				Resource inResource = resourceSet.getResource(uri, true);
+				EList<EObject> inObjects = inResource.getContents();
+				setContents(inObjects);
+			}
+		}
     	
     }
 

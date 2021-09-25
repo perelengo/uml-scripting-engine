@@ -259,7 +259,7 @@
 		<dependency>
 			<groupId>net.samsarasoftware</groupId>
 			<artifactId>net.samsarasoftware.metamodels</artifactId>
-			<version>0.2.0</version>
+			<version>0.2.1</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->

@@ -32,7 +32,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.util.Diagnostic;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -45,12 +44,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.m2m.internal.qvt.oml.InternalTransformationExecutor;
 import org.eclipse.m2m.qvt.oml.ExecutionContextImpl;
 import org.eclipse.m2m.qvt.oml.ExecutionDiagnostic;
+import org.eclipse.m2m.qvt.oml.ModelExtent;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.UMLPlugin;
 import org.eclipse.uml2.uml.resource.UMLResource;
 
-import net.samsarasoftware.scripting.qvto.In;
 import net.samsarasoftware.scripting.qvto.InOut;
 import net.samsarasoftware.scripting.qvto.Out;
 import net.samsarasoftware.scripting.qvto.Param;
@@ -78,60 +77,17 @@ limitations under the License.
 
 public class ScriptingEngine {
 
-	public String SCRIPT_MODEL = null;
-	private String TARGET_MODEL = null;
-	public String OUTPUT;
-	public List<Param> INPUT=new ArrayList<Param>();
-	ResourceSet resourceSet;
-
-
-	public void parseParams(String[] args) throws Exception {
-		if (args.length < 4)
-			printUsage();
-
-		for (int i = 0; i < args.length; i++) {
-			if ("-script".equals(args[i])) {
-				SCRIPT_MODEL = args[++i];
-				TARGET_MODEL = (TARGET_MODEL==null)?SCRIPT_MODEL:TARGET_MODEL;
-			}else if("-model".equals(args[i])){
-				TARGET_MODEL = args[++i];
-			}else if("-in".equals(args[i])){
-				if(args[i+1].contains(":/"))
-					INPUT.add(new In(URI.createURI(args[++i])));
-				else
-					INPUT.add(new In(URI.createFileURI(args[++i])));
-			}else if("-inout".equals(args[i])){
-				if(args[i+1].contains(":/"))
-					INPUT.add(new InOut(URI.createURI(args[++i])));
-				else
-					INPUT.add(new InOut(URI.createFileURI(args[++i])));
-			}else if("-out".equals(args[i])){
-				if(args[i+1].contains(":/"))
-					INPUT.add(new Out(URI.createURI(args[++i])));
-				else
-					INPUT.add(new Out(URI.createFileURI(args[++i])));
-			}else{
-				printUsage();
-			}
-		}
-	}
-
-	private void printUsage() throws Exception {
-		throw new Exception("Errores en los argumentos. Uso:\n \n "
-				+ "java -jar uml-scripting-engine-0.2.0-SNAPSHOT-jar-with-dependencies.jar \n " 
-					+ "	-script 	<path to uml model with the uml2qvto profile applied> \n "
-					+ "	-model 		<path to uml model the transform will be applied to. If not defined or is the same as the script model, the script model is used and is treated as an internal transformation.> \n "
-					+ "	-in 		<QVTO dependencies Input URI (metamodel URI, uml primitive types model URI,...)> \n "
-					+ "	-in ... \n "
-					+ "	-in ... \n "
-					+ "	-inout 		<additional URIs of files that are input and output at the same time> \n "
-					+ "	-inout ... \n "
-					+ "	-inout ... \n "
-					+ "	-out 		<additional URIs of files that are output files> \n "
-				);
-	}
-
-	public File runCompile() throws Exception {
+	/**
+	 * Transforms the UML with the uml2qvto profile applied, to a QVTO file.
+	 * 
+	 * @param inStream qvto file
+	 * @param in List of all input parameters to the qvto.
+	 * @param inOut List of all inputOutput parameters to the qvto.
+	 * @param out List of all output parameters to the qvto.
+	 * @return Generated Qvto file
+	 * @throws Exception
+	 */
+	public File runCompile(InputStream inStream, List<String> in,List<String> inOut, List<String> out) throws Exception {
 		InputStream bais =null;
 		try {
 			
@@ -153,13 +109,16 @@ public class ScriptingEngine {
 			Source xslt = new StreamSource(bais);
 			Transformer transformer = factory.newTransformer(xslt);
 
-			Source text = new StreamSource(new File(SCRIPT_MODEL));
+			Source text = new StreamSource(inStream);
 			File tempFile=File.createTempFile("uml-scripting-engine", ".qvto");
 
-			//FIXME- uncomment 
-			//tempFile.deleteOnExit();
+			tempFile.deleteOnExit();
 			
 			FileOutputStream baosXsl=new FileOutputStream(tempFile);
+			
+			transformer.setParameter("in_files", String.join(";",in.toArray(new String[in.size()])));
+			transformer.setParameter("inout_files", String.join(";",inOut.toArray(new String[inOut.size()])));
+			transformer.setParameter("out_files",  String.join(";",out.toArray(new String[out.size()])));
 			transformer.transform(text, new StreamResult(baosXsl));
 			
 			return tempFile;
@@ -174,47 +133,53 @@ public class ScriptingEngine {
 				}catch(Exception e){}
 		}
 	}
+
+
 	
-	public void runTransform(File qvto) throws Exception {
+	/**
+	 * Runs a QVTO transformation on standalone environments.
+	 * 
+	 * @param qvto
+	 * @param INPUT
+	 * @throws Exception
+	 */
+	public void runTransformStandalone(File qvto, List<? extends ModelExtent> INPUT) throws Exception {
+		ResourceSet resourceSet=new ResourceSetImpl();
+		
+		registerResourceFactories(resourceSet);
+		registerPackagesStandalone(resourceSet);
+
+		for (ModelExtent inputURI : INPUT) {
+			resourceSet.getURIConverter().getURIMap();
+			if(inputURI instanceof Param) {
+				((Param) inputURI).initialize(resourceSet);
+			}
+			
+		}
 		try {
 			
 			//Inicio de transformación QVTO
 			InternalTransformationExecutor executor = new InternalTransformationExecutor(URI.createFileURI(qvto.getAbsolutePath()));
 
 			ExecutionContextImpl context = new ExecutionContextImpl();
-			resourceSet = new ResourceSetImpl();
-			registerResourceFactories(resourceSet);
-			registerPackages(resourceSet);
 
-			
-			INPUT.add(0,new InOut(URI.createFileURI(TARGET_MODEL)));
-
-			for (Param inputURI : INPUT) {
-				resourceSet.getURIConverter().getURIMap();
-				Resource inResource = resourceSet.getResource(inputURI.getUri(), true);
-				EList<EObject> inObjects = inResource.getContents();
-				inputURI.setContents(inObjects);
-			}
-			
-
-
-			ExecutionDiagnostic result = executor.execute(context,  INPUT.toArray(new Param[INPUT.size()]));
+			ExecutionDiagnostic result = executor.execute(context,  INPUT.toArray(new ModelExtent[INPUT.size()]));
 
 			if (result.getSeverity() == Diagnostic.OK) {
-				for (Param modelExtent : INPUT) {
+				for (ModelExtent modelExtent : INPUT) {
 					if(modelExtent instanceof InOut
 							|| modelExtent instanceof Out){
 						List<EObject> outObjects = modelExtent.getContents();
 						ResourceSet resourceSet2 = new ResourceSetImpl();
 						Resource outResource = resourceSet2
-								.getResource(modelExtent.getUri(), true);
+								.getResource(((Param)modelExtent).getUri(), true);
 						outResource.getContents().clear();
 						outResource.getContents().addAll(outObjects);
 						outResource.save(Collections.emptyMap());
 						
 //						//PJR: Al ser un entorno standalone, las URLs de los perfiles se transforman a URLs del sistema de ficheros.
 //						//Convertimos las URLs del sistema de ficheros al URLs de plugin de la plataforma
-						InputStream fis=new FileInputStream(modelExtent.getUri().toFileString());
+						InputStream fis=new FileInputStream(((Param)modelExtent).getUri().toFileString());
 						ByteArrayOutputStream baos3=new ByteArrayOutputStream();
 						byte buf[]=new byte[10240];
 						int readed=0;
@@ -233,12 +198,53 @@ public class ScriptingEngine {
 						}
 						//replacedContent=content.replaceAll("jar([^\\s]*)net.samsarasoftware.metamodels([^\\s]*)jar!", "platform:/plugin/net.samsarasoftware.metamodels");
 						//replacedContent=replacedContent.replaceAll("jar([^\\s]*)Standard.profile.uml#_0", "pathmap://UML_PROFILES/Standard.profile.uml#_0");
-						FileOutputStream fos=new FileOutputStream(modelExtent.getUri().toFileString());
+						FileOutputStream fos=new FileOutputStream(((Param)modelExtent).getUri().toFileString());
 						fos.write(replacedContent.getBytes());
 						try{
 							fos.close();
 						}catch(Exception e){}
 						
+					}
+				}
+			} else {
+				throw new Exception(result.getMessage());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	/**
+	 * Runs a QVTO transform using a given ResourceSet. Used for Eclipse Plugins, for example.
+	 * 
+	 * @param qvto
+	 * @param INPUT
+	 * @param resourceSet
+	 * @throws Exception
+	 */
+	public void runTransform(File qvto, List<? extends ModelExtent> INPUT, ResourceSet resourceSet) throws Exception {
+
+		try {
+			
+			//Inicio de transformación QVTO
+			InternalTransformationExecutor executor = new InternalTransformationExecutor(URI.createFileURI(qvto.getAbsolutePath()));
+
+			ExecutionContextImpl context = new ExecutionContextImpl();
+
+			
+			
+			ExecutionDiagnostic result = executor.execute(context,  INPUT.toArray(new ModelExtent[INPUT.size()]));
+
+			if (result.getSeverity() == Diagnostic.OK) {
+				for (ModelExtent modelExtent : INPUT) {
+					if(modelExtent instanceof InOut
+							|| modelExtent instanceof Out){
+						List<EObject> outObjects = modelExtent.getContents();
+						Resource outResource = resourceSet
+								.getResource(((Param)modelExtent).getUri(), true);
+						outResource.save(Collections.emptyMap());
 					}
 
 				}
@@ -254,43 +260,16 @@ public class ScriptingEngine {
 		}
 	}
 
-	public static void main(String[] args) {
-		ScriptingEngine s = new ScriptingEngine();
-		try {
-			s.parseParams(args);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-		File qvto = null;
-
-		try {
-			qvto= s.runCompile();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(2);
-		}
-
-		try {
-			s.runTransform(qvto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(3);
-		}
-
-		
-	}
-
 
 	/**
+     * For standalone environments.
      * Registers all content that needs to be referenced in XMI files or xmi imported files and dependencies, such as standard uml packages, standard profiles and user defined profiles.
      * 
      * @param resourceSet
      *            The resource set which registry has to be updated.
      *
      */
-    public void registerPackages(ResourceSet resourceSet) {
+    public void registerPackagesStandalone(ResourceSet resourceSet) {
     	//Classes used to guess classpath configuration
     	String resourcesPlugin = "org/eclipse/uml2/uml/resources/ResourcesPlugin.class";
         URL resourcesPluginUrl = this.getClass().getClassLoader().getResource( resourcesPlugin );
@@ -312,7 +291,7 @@ public class ScriptingEngine {
         	
         	String[] cpFiles=null;
         	
-        	URLClassLoader classLoader=(URLClassLoader) (Thread.currentThread().getContextClassLoader());
+        	ClassLoader classLoader=(Thread.currentThread().getContextClassLoader());
             ExtensionProcessor.process(classLoader);
             	
             String classpath = null;
@@ -322,7 +301,7 @@ public class ScriptingEngine {
             boolean extendClassLoaderClassPath=true;
             try
             {
-            	URL[] ucp=classLoader.getURLs();
+            	URL[] ucp=(classLoader instanceof URLClassLoader)?((URLClassLoader)classLoader).getURLs():new URL[] {};
         		String[] cpFiles2 = new String[ucp.length];
             	
         		//Path of the jar containing the ResourcesPlugin.class
@@ -508,14 +487,6 @@ public class ScriptingEngine {
 	              }
 	            }
         }
-        //URI platformPluginURI = URI.createPlatformPluginURI(pluginID + "/", false);
-        //URI platformResourceURI = URI.createPlatformResourceURI(project.getName() + "/",  true);
-        //result.put(platformPluginURI, platformResourceURI);
-
-        
-        //EList<URIHandler> uriHandlers = resourceSet.getURIConverter().getURIHandlers();
-    	//uriHandlers.add(0, new ClasspathURIHandler());
-    	
         
         //Register basic libraries uri handlers
         String baseUrl = resourcesPluginUrl.toString();    
@@ -525,12 +496,6 @@ public class ScriptingEngine {
         uriMap.put(URI.createURI( UMLResource.METAMODELS_PATHMAP ), baseUri.appendSegment( "metamodels" ).appendSegment( "" ));
         uriMap.put(URI.createURI( UMLResource.PROFILES_PATHMAP ), baseUri.appendSegment( "profiles" ).appendSegment( "" ));
 
-//Duplicated job after processing classpath
-//        try {
-//			registerJarProfiles(resourceSet,baseUrl.replace("jar:file:/","").replace("!/", ""));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
   
         UMLPlugin.getEPackageNsURIToProfileLocationMap().put(org.eclipse.uml2.uml.profile.standard.StandardPackage.eINSTANCE.getNsURI()
         		, URI.createURI("pathmap://UML_PROFILES/Standard.profile.uml#_0"));
@@ -647,5 +612,6 @@ public class ScriptingEngine {
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(UMLResource.FILE_EXTENSION, UMLResource.Factory.INSTANCE);
 
     }
+
 
 }
