@@ -373,7 +373,7 @@
 	</build>
 
 	<scm>
-		<developerConnection>scm:git:https://github.com/perelengo/uml-scripting-engine.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:perelengo/uml-scripting-engine.git</developerConnection>
 	</scm>
 	<distributionManagement>
 		<repository>
