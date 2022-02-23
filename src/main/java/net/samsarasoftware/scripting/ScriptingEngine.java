@@ -296,7 +296,7 @@ public class ScriptingEngine {
             	
             String classpath = null;
             classpath = System.getProperty("java.class.path");
-            String[] cpFiles1 = classpath.split(";");
+            String[] cpFiles1 = (classpath.indexOf(";")!=-1)?classpath.split(";"):classpath.split(":"); //; for windows : for linux
             
             boolean extendClassLoaderClassPath=true;
             try
