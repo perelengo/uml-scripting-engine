@@ -126,7 +126,7 @@ public class InternalTransformationRuntimeTest {
 	}
 
 	private void runTransform(ScriptingEngineLauncher scriptingEngine) {
-		String[] args = new String[] { "-script", script, "-in", "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml" };
+		String[] args = new String[] { "-script", script, "-dep", "pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml" };
 		
 		try {
 			scriptingEngine.parseParams(args);
