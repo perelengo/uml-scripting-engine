@@ -86,7 +86,8 @@ For example, you want to create a Component realization form a component to anot
 TO-DO
 
 ### Removing content
-TO-DO
+
+To remove content, create an element and apply the stereotype uml2qvto:Delete whose "selector" tagged value must invoke a query.
 
 ## Run
 JDK > 1.7
