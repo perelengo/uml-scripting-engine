@@ -19,13 +19,21 @@ External transformations are applied to external models.
 ## Execution parameters
 
 -script 	<path to uml model with the uml2qvto profile applied> 
+
 -model 		<path to uml model the transform will be applied to. If not defined or is the same as the script model, the script model is used and is treated as an internal transformation.> 
+
 -dep 		<QVTO dependencies (not profiles) Input URI. A Transformation may need a fixed number of input files and a variable number of profiles. In this case, the input files should be passed as -dep and the profiles as -in parameters>
+
 -in ... <additional profiles Input URI>
+
 -in ...
+
 -inout 	<additional URIs of files that are input and output at the same time>
+
 -inout ...
+
 -inout ...
+
 -out 		<additional URIs of files that are output files>
 
 ### Qvto utility funcions
@@ -33,8 +41,11 @@ External transformations are applied to external models.
 When you need to define additional functions or transformations, apply to the Model element the profile "uml2qvto:QvtoAdditionalOperations" and write in the tagged value "qvto" the QVTO code that you want to insert in the output QVTO.
 
 Example qvto: (Returns all enumerations in the model whose name is "Enumeration1")
+
   query getEnumeration1Literals( model : uml::Model ) : Set ( EnumerationLiteral ) {
+
     return model.allOwnedElements()->selectByType(uml::Enumeration)->any(e | e.name = 'Enumeration1' ).ownedLiteral
+
   }
 
 
