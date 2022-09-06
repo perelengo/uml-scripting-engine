@@ -49,6 +49,11 @@ Example qvto: (Returns all enumerations in the model whose name is "Enumeration1
   }
 
 
+### Structuring the transformation
+
+You can use the "uml2qvto:Ignore" stereotype to structure elements that won't be processed by the scripting engine. For example: You want to group different templates in packages. Each of this packages should be stereotyped with "uml2qvto:Ignore" so the engine will ignore them.
+  
+  
 ### Templating content
 
 When an element in the script model is stereotyped with the "uml2qvto:QvtoTemplate" stereotype, all of its sub-elements are processed for-each of the elements in the sequence defined in the "selector" tagged value.
@@ -72,8 +77,10 @@ Then if inside the QvtoTemplate'd package you have another class with another Qv
 
 
 ### Querying elements
-TO-DO
 
+Sometimes you need to reference elements in a dynamic way, for example, want to create associations between a fixed class and a dynamic number of classes. As UML diagram forces to select the dynamic end as an UML element, you can apply to it the "uml2qvto:Query" stereotype to convert this element in a dynamic element, resulting as the result of the query execution.
+
+For example, you want to create a Component realization form a component to another. To do that, create two components, each stereotyped with the Query stereotype whose "query" tagged value contains a qvto function that returns the desired elements. Then create a ComponentRealization in the script UML between these two components and stereotype it with QvtoTemplate.
 
 ### Updating content
 TO-DO
