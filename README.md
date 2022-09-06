@@ -54,13 +54,19 @@ Example qvto: (Returns all enumerations in the model whose name is "Enumeration1
 When an element in the script model is stereotyped with the "uml2qvto:QvtoTemplate" stereotype, all of its sub-elements are processed for-each of the elements in the sequence defined in the "selector" tagged value.
 
 #### uml2qvto:QvtoTemplate Stereotype usage
+
 The "selector" tagged value is a qvto code/query than mut be/return a Collection of elements to process.
+
 The "target" tagged value is the qvto code/query that will be used as the destiny of applying the template. 
+
 -It can be "model" -> the template results will be appended to the input model
+
 -It can be a query invocation.
+
 -It can be the XMI:ID of the element where you want to append the results of the template.
 
 Every QvtoTemplate generates a forEach loop where the current element can be referenced with the "__elem"+template nesting level. For example:
+
 If you apply a QvtoTemplate to a package where the selector returns all classes in an input model package, the template will generate a package for-each of the classes fond, and the current input model class can be referenced using the __elem1 variable.
 Then if inside the QvtoTemplate'd package you have another class with another QvtoTemplate, you can use the __elem1 and __elem2 variable references.
 
