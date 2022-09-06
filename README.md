@@ -16,24 +16,47 @@ Internal transformations are applied to the same model the profile is applied to
 
 External transformations are applied to external models.
 
+## Execution parameters
 
-### Internal transformations
-23/07/2020 JUnit test case created
+-script 	<path to uml model with the uml2qvto profile applied> 
+-model 		<path to uml model the transform will be applied to. If not defined or is the same as the script model, the script model is used and is treated as an internal transformation.> 
+-dep 		<QVTO dependencies (not profiles) Input URI. A Transformation may need a fixed number of input files and a variable number of profiles. In this case, the input files should be passed as -dep and the profiles as -in parameters>
+-in ... <additional profiles Input URI>
+-in ...
+-inout 	<additional URIs of files that are input and output at the same time>
+-inout ...
+-inout ...
+-out 		<additional URIs of files that are output files>
 
-06/10/2020 JUnit test case added validation with OCL queries
+### Qvto utility funcions
 
-### External transformations
-23/07/2020 JUnit test case created
+When you need to define additional functions or transformations, apply to the Model element the profile "uml2qvto:QvtoAdditionalOperations" and write in the tagged value "qvto" the QVTO code that you want to insert in the output QVTO.
 
-06/10/2020 JUnit test case added validation with OCL queries
+Example qvto: (Returns all enumerations in the model whose name is "Enumeration1")
+  query getEnumeration1Literals( model : uml::Model ) : Set ( EnumerationLiteral ) {
+    return model.allOwnedElements()->selectByType(uml::Enumeration)->any(e | e.name = 'Enumeration1' ).ownedLiteral
+  }
 
-StandardProfileApplication test created.
+
+### Templating content
+
+When an element in the script model is stereotyped with the "uml2qvto:QvtoTemplate" stereotype, all of its sub-elements are processed for-each of the elements in the sequence defined in the "selector" tagged value.
+
+#### uml2qvto:QvtoTemplate Stereotype usage
+The "selector" tagged value is a qvto code/query than mut be/return a Collection of elements to process.
+The "target" tagged value is the qvto code/query that will be used as the destiny of applying the template. 
+-It can be "model" -> the template results will be appended to the input model
+-It can be a query invocation.
+-It can be the XMI:ID of the element where you want to append the results of the template.
+
+Every QvtoTemplate generates a forEach loop where the current element can be referenced with the "__elem"+template nesting level. For example:
+If you apply a QvtoTemplate to a package where the selector returns all classes in an input model package, the template will generate a package for-each of the classes fond, and the current input model class can be referenced using the __elem1 variable.
+Then if inside the QvtoTemplate'd package you have another class with another QvtoTemplate, you can use the __elem1 and __elem2 variable references.
+
 
 ### Querying elements
 TO-DO
 
-### Temlating content
-TO-DO
 
 ### Updating content
 TO-DO
