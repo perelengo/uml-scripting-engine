@@ -112,7 +112,7 @@ public class ScriptingEngine {
 			Source text = new StreamSource(inStream);
 			File tempFile=File.createTempFile("uml-scripting-engine", ".qvto");
 
-			tempFile.deleteOnExit();
+			//tempFile.deleteOnExit();
 			
 			FileOutputStream baosXsl=new FileOutputStream(tempFile);
 			
@@ -460,7 +460,10 @@ public class ScriptingEngine {
 				                		  uriMap.put(platformPluginURI, URI.createURI((String) resolvedURL));
 				                		  uriMap.put(platformResourceURI.trimSegments(1).appendSegment("target").appendSegment("classes").appendSegment(""), URI.createURI((String) resolvedURL));
 				                		  
-				                		  registerJarProfiles(resourceSet, (String) baseURL.substring(0,baseURL.indexOf("!")).replace("file:/", ""));
+				                		  if(System.getProperty("os.name").indexOf("Windows")!=-1)
+				                			  registerJarProfiles(resourceSet, (String) baseURL.substring(0,baseURL.indexOf("!")).replace("file:/", ""));
+				                		  else
+				                			  registerJarProfiles(resourceSet, (String) baseURL.substring(0,baseURL.indexOf("!")).replace("file:", ""));
 				                	  }
 				                  		
 		                	  		}
@@ -527,7 +530,7 @@ public class ScriptingEngine {
 		while(jarEntries.hasMoreElements()){
 			entry=(JarEntry) jarEntries.nextElement();
     		if(entry.getName().endsWith("profile.uml")){
-    			registerProfile(resourceSet, URI.createURI("jar:file:/"+jarFilePath+"!/"+entry.getName()));
+    			registerProfile(resourceSet, URI.createURI("jar:file:"+jarFilePath+"!/"+entry.getName()));
     		}
     	}
 	}
