@@ -154,7 +154,7 @@ property outModel<xsl:value-of select="position()"/> : Model = outFile<xsl:value
 		<xsl:variable name="selection_map_obj">
 			<xsl:call-template name="split">
 				<xsl:with-param name="text" select="$selection_array"/>
-				<xsl:with-param name="splitChar" select="'='"/>
+				<xsl:with-param name="splitChar" select="'#'"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="selection_map" select="common:node-set($selection_map_obj)//text" />
@@ -175,11 +175,30 @@ main(){
 		<xsl:variable name="selection_map_obj">
 			<xsl:call-template name="split">
 				<xsl:with-param name="text" select="$selection_array"/>
-				<xsl:with-param name="splitChar" select="'='"/>
+				<xsl:with-param name="splitChar" select="'#'"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="selection_map" select="common:node-set($selection_map_obj)//text" />
-		<xsl:value-of select="$selection_map[1]"/> := <xsl:value-of select="$selection_map[3]"/>;
+		
+		<xsl:choose>
+			<xsl:when test="substring($selection_map[3],1,1) =  '{'">
+				<xsl:variable name="sequence_arr">
+					<xsl:call-template name="split">
+						<xsl:with-param name="text" select="$selection_map[3]"/>
+						<xsl:with-param name="splitChar" select="'}'"/>
+					</xsl:call-template>
+				</xsl:variable>	
+				<xsl:for-each select="common:node-set($sequence_arr)//text">
+					<xsl:if test="not(.='')">
+						<xsl:variable name="len" select="string-length($selection_map[3])-2"/>
+this.<xsl:value-of select="$selection_map[1]"/> = this.<xsl:value-of select="$selection_map[1]"/>->append(<xsl:value-of select="substring($selection_map[3],2,$len)"/>);
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+<xsl:value-of select="$selection_map[1]"/> := <xsl:value-of select="$selection_map[3]"/>;
+			</xsl:otherwise>
+		</xsl:choose>
 		</xsl:if>
 	</xsl:for-each>
 		
