@@ -46,6 +46,7 @@
 	<xsl:param name="in_files" />
 	<xsl:param name="inout_files" />
 	<xsl:param name="out_files" />
+	<xsl:param name="selection_array" />
 	
 	<xsl:variable name="root" select="/" />
 	<xsl:variable name="umlMetamodel" select="document('metamodels/http__www.eclipse.org_uml2_5_0_0_UML.ecore')"/>
@@ -96,6 +97,13 @@ transformation <xsl:apply-templates select="@name" mode="normalize-id"/>(
 			<xsl:with-param name="splitChar" select="';'"/>
 		</xsl:call-template>
 	</xsl:variable>
+	<xsl:variable name="selection_array_arr">
+		<xsl:call-template name="split">
+			<xsl:with-param name="text" select="$selection_array"/>
+			<xsl:with-param name="splitChar" select="';'"/>
+		</xsl:call-template>
+	</xsl:variable>	
+		
 	<xsl:for-each select="common:node-set($in_files_arr)//text">
 		<xsl:if test="not(.='')">
 		//<xsl:value-of select="."/> 
@@ -114,6 +122,7 @@ transformation <xsl:apply-templates select="@name" mode="normalize-id"/>(
 		,out outFile<xsl:value-of select="position()"/> : uml
 		</xsl:if>
 	</xsl:for-each>
+	
 	
 );
 
@@ -135,16 +144,44 @@ property inoutModel<xsl:value-of select="position()"/> : Model = inoutFile<xsl:v
 
 	<xsl:for-each select="common:node-set($out_files_arr)//text">
 		<xsl:if test="not(.='')">
-//<xsl:value-of select="."/> 
+//<xsl:value-of select="."/>
 property outModel<xsl:value-of select="position()"/> : Model = outFile<xsl:value-of select="position()"/>.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model);
 		</xsl:if>
 	</xsl:for-each>
 
+	<xsl:for-each select="common:node-set($selection_array_arr)//text">
+		<xsl:if test="not(.='')">
+		<xsl:variable name="selection_map_obj">
+			<xsl:call-template name="split">
+				<xsl:with-param name="text" select="$selection_array"/>
+				<xsl:with-param name="splitChar" select="'='"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="selection_map" select="common:node-set($selection_map_obj)//text" />
+//<xsl:value-of select="."/> 
+property <xsl:value-of select="$selection_map[1]"/> : <xsl:value-of select="$selection_map[2]"/>;
+		</xsl:if>
+	</xsl:for-each>
 <!-- the main script of the transformation -->
 main(){
 	file.objects()->select(e | e.oclIsTypeOf(uml::Model))->forEach(__model){
 		var model:uml::Model;
 		model:=__model.oclAsType(Model);
+
+	
+
+	<xsl:for-each select="common:node-set($selection_array_arr)//text">
+		<xsl:if test="not(.='')">
+		<xsl:variable name="selection_map_obj">
+			<xsl:call-template name="split">
+				<xsl:with-param name="text" select="$selection_array"/>
+				<xsl:with-param name="splitChar" select="'='"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="selection_map" select="common:node-set($selection_map_obj)//text" />
+		<xsl:value-of select="$selection_map[1]"/> := <xsl:value-of select="$selection_map[3]"/>;
+		</xsl:if>
+	</xsl:for-each>
 		
 		<!-- apply profiles to the generated model -->
 		<xsl:apply-templates select="//*[namespace-uri()!='http://www.omg.org/spec/XMI/20131001' and namespace-uri()!='' and namespace-uri()!='http://www.eclipse.org/uml2/5.0.0/UML'  and namespace-uri()!='http://www.samsarasoftware.net/uml2qvto.profile']" mode="apply-profiles"/>

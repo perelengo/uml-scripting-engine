@@ -84,10 +84,11 @@ public class ScriptingEngine {
 	 * @param in List of all input parameters to the qvto.
 	 * @param inOut List of all inputOutput parameters to the qvto.
 	 * @param out List of all output parameters to the qvto.
+	 * @param INPUT_OBJECTS 
 	 * @return Generated Qvto file
 	 * @throws Exception
 	 */
-	public File runCompile(InputStream inStream, List<String> in,List<String> inOut, List<String> out) throws Exception {
+	public File runCompile(InputStream inStream, List<String> in,List<String> inOut, List<String> out, String inputObjects) throws Exception {
 		InputStream bais =null;
 		try {
 			
@@ -119,6 +120,9 @@ public class ScriptingEngine {
 			transformer.setParameter("in_files", String.join(";",in.toArray(new String[in.size()])));
 			transformer.setParameter("inout_files", String.join(";",inOut.toArray(new String[inOut.size()])));
 			transformer.setParameter("out_files",  String.join(";",out.toArray(new String[out.size()])));
+			if(inputObjects!=null)
+				transformer.setParameter("selection_array",  inputObjects);
+			
 			transformer.transform(text, new StreamResult(baosXsl));
 			
 			return tempFile;

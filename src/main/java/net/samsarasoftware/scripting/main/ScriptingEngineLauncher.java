@@ -47,6 +47,7 @@ public class ScriptingEngineLauncher {
 	private List<String> OUT=new ArrayList<String>();
 	private ResourceSet resourceSet;
 	private ScriptingEngine engine;
+	private String INPUT_OBJECTS=null;
 
 	private void printUsage() throws Exception {
 		throw new Exception("Errores en los argumentos. Uso:\n \n "
@@ -60,6 +61,7 @@ public class ScriptingEngineLauncher {
 					+ "	-inout ... \n "
 					+ "	-inout ... \n "
 					+ "	-out 		<additional URIs of files that are output files> \n "
+					+ "	-params 	<additional inut object mappings that are not files : package1:Package;class1:Class > \n "
 				);
 	}
 
@@ -102,6 +104,8 @@ public class ScriptingEngineLauncher {
 					INPUT.add(new Out(URI.createFileURI(args[++i])));
 
 				OUT.add(args[i]);
+			}else if("-params".equals(args[i])){
+				INPUT_OBJECTS = args[++i];
 			}else{
 				printUsage();
 			}
@@ -141,7 +145,7 @@ public class ScriptingEngineLauncher {
 		FileInputStream fis=null;
 		try{
 			fis=new FileInputStream(SCRIPT_MODEL);
-			return engine.runCompile(fis, IN, INOUT, OUT);
+			return engine.runCompile(fis, IN, INOUT, OUT,INPUT_OBJECTS);
 		}finally {
 			if(fis!=null) try { fis.close(); } catch(Exception e) {}
 		}
