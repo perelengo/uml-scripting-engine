@@ -126,6 +126,9 @@ transformation <xsl:apply-templates select="@name" mode="normalize-id"/>(
 	
 );
 
+//params property contains all the params passed to the qvto or empty if none
+property params:Sequence(Collection(OclAny));
+
 <!-- the global variable allModels can be used to resolve external model references -->
 property allModels:Collection(uml::Model)=file.objects()->select(e | e.oclIsTypeOf(uml::Model))->any(true).oclAsType(Model).allOwnedElements()->collect(e | e.oclAsType(Element).getRelationships())->collect( e | e.relatedElement)->collect(e | e.getModel())->asSet();
 	<xsl:for-each select="common:node-set($in_files_arr)//text">
@@ -191,12 +194,15 @@ main(){
 				<xsl:for-each select="common:node-set($sequence_arr)//text">
 					<xsl:if test="not(.='')">
 						<xsl:variable name="len" select="string-length($selection_map[3])-2"/>
-this.<xsl:value-of select="$selection_map[1]"/> = this.<xsl:value-of select="$selection_map[1]"/>->append(<xsl:value-of select="substring($selection_map[3],2,$len)"/>);
+this.<xsl:value-of select="$selection_map[1]"/> := this.<xsl:value-of select="$selection_map[1]"/>->append(<xsl:value-of select="substring($selection_map[3],2,$len)"/>);
+this.params->append(this.<xsl:value-of select="$selection_map[1]"/>);
+
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
 <xsl:value-of select="$selection_map[1]"/> := <xsl:value-of select="$selection_map[3]"/>;
+this.params->append(Sequence{this.<xsl:value-of select="$selection_map[1]"/>});
 			</xsl:otherwise>
 		</xsl:choose>
 		</xsl:if>
