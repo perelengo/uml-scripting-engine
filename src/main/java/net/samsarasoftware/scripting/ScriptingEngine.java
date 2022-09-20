@@ -248,12 +248,13 @@ public class ScriptingEngine {
 						List<EObject> outObjects = modelExtent.getContents();
 						Resource outResource = resourceSet
 								.getResource(((Param)modelExtent).getUri(), true);
-						outResource.save(Collections.emptyMap());
+//						outResource.save(Collections.emptyMap());
 					}
 
 				}
 			} else {
 				System.err.println(result.getMessage());
+				throw new Exception(result.getMessage());
 			}
 			
 			
