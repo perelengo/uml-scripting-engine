@@ -240,15 +240,15 @@ public class ScriptingEngine {
 			
 			
 			ExecutionDiagnostic result = executor.execute(context,  INPUT.toArray(new ModelExtent[INPUT.size()]));
-
+			
 			if (result.getSeverity() == Diagnostic.OK) {
 				for (ModelExtent modelExtent : INPUT) {
 					if(modelExtent instanceof InOut
 							|| modelExtent instanceof Out){
-						List<EObject> outObjects = modelExtent.getContents();
+						modelExtent.getContents().get(0).eAllContents(); //forces loading everything in model
 						Resource outResource = resourceSet
 								.getResource(((Param)modelExtent).getUri(), true);
-//						outResource.save(Collections.emptyMap());
+						outResource.save(Collections.emptyMap());
 					}
 
 				}
